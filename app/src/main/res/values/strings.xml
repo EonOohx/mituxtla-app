@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MiTuxtlaApp</string>
+    <string name="developer">Raúl Alejandro Rodríguez Rodríguez</string>
+    <string name="github">https://github.com/EonOohx</string>
+    <string name="email">RaulAlejandro_RodriguezR@hotmail.com</string>
+    <string name="menu">Menu</string>
+    <string name="favorites">favorites</string>
+    <string name="search_place">search place</string>
 </resources>
