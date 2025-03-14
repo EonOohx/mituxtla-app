@@ -3,7 +3,22 @@
     <string name="developer">Raúl Alejandro Rodríguez Rodríguez</string>
     <string name="github">https://github.com/EonOohx</string>
     <string name="email">RaulAlejandro_RodriguezR@hotmail.com</string>
-    <string name="menu">Menu</string>
-    <string name="favorites">favorites</string>
-    <string name="search_place">search place</string>
+    <string name="menu_button">Menu button</string>
+    <string name="favorites">Favorites</string>
+    <string name="search_button">Search place</string>
+    <string name="favorite_places_button">See favorite places</string>
+    <string name="category">Category</string>
+    <string name="place">Place</string>
+    <string name="results">Results</string>
+    <string name="about">About</string>
+    <string name="feedback">Feedback</string>
+    <string name="back_button">Back</string>
+    <string name="filter_places">Filter places</string>
+    <string name="language_button">Language</string>
+    <string name="appearance_button">Appearance</string>
+    <string name="appearance_description">Switch Appearance</string>
+    <string name="feedback_button">Send Feedback</string>
+    <string name="feedback_description">Send feedback</string>
+    <string name="category_option">Category</string>
+    <string name="viewed_option">Viewed</string>
 </resources>

@@ -14,7 +14,8 @@ val daysOneRegular = FontFamily(Font(resId = R.font.days_one))
 val Typography = Typography(
     headlineLarge = Typography().headlineLarge.copy(
         fontFamily = daysOneRegular,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        fontSize = 28.sp
     ),
     headlineMedium = Typography().headlineMedium.copy(
         fontFamily = daysOneRegular,

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.MaterialTheme
@@ -25,21 +27,17 @@ import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 
 @Composable
 fun AboutScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.loading),
-                contentDescription = "",
-                modifier = Modifier.size(160.dp)
-            )
-            Text(
-                text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.headlineMedium
-            )
-        }
+    Column(
+        modifier = modifier.verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Image(
+            painter = painterResource(R.drawable.loading),
+            contentDescription = "",
+            modifier = Modifier
+                .size(160.dp)
+                .align(Alignment.CenterHorizontally)
+        )
         Text(text = "Text of the about page", modifier = Modifier.fillMaxWidth())
         Text(text = "Version: 1.0. Released on March 20th 2025")
         Text(text = "Contact", style = MaterialTheme.typography.headlineMedium)
