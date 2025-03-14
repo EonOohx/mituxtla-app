@@ -20,10 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.eonoohx.mituxtlaapp.R
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 import com.eonoohx.mituxtlaapp.ui.theme.Shape
@@ -38,17 +38,17 @@ fun ContentScreen(
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(4.dp)
+        contentPadding = PaddingValues(dimensionResource(R.dimen.padding_small))
     ) {
         items(contentList) { element ->
             Card(shape = Shape.small, onClick = onSelectOptionClicked) {
                 if (isOnMenu) MenuContentScreen(
                     text = "Content Menu",
-                    modifier = Modifier.padding(1.dp)
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
                 )
                 else CategoryContentScreen(
                     text = "Content Category",
-                    modifier = Modifier.padding(1.dp)
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
                 )
             }
         }
@@ -96,7 +96,7 @@ fun CategoryContentScreen(text: String, modifier: Modifier = Modifier) {
 @Composable
 fun ContentText(text: String, modifier: Modifier = Modifier, isOnMenu: Boolean = true) {
     Box(
-        modifier = modifier.height(60.dp),
+        modifier = modifier.height(dimensionResource(R.dimen.content_card_size)),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -108,7 +108,7 @@ fun ContentText(text: String, modifier: Modifier = Modifier, isOnMenu: Boolean =
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = dimensionResource(R.dimen.padding_small))
         )
     }
 }

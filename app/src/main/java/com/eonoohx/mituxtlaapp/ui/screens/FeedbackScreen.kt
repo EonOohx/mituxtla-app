@@ -19,9 +19,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.eonoohx.mituxtlaapp.R
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
+import com.eonoohx.mituxtlaapp.ui.theme.Shape
 
 @Composable
 fun FeedbackScreen(modifier: Modifier = Modifier) {
@@ -30,21 +32,22 @@ fun FeedbackScreen(modifier: Modifier = Modifier) {
     }
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
     ) {
         Text(text = "Share your feedback", style = MaterialTheme.typography.headlineMedium)
         Text(text = "text about sharing feedback")
         TextField(
             value = textInput,
             onValueChange = { textInput = it },
+            shape = Shape.small,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(180.dp)
+                .height(dimensionResource(R.dimen.size_large))
         )
         Button(
             onClick = {},
             modifier = Modifier
-                .width(160.dp)
+                .width(dimensionResource(R.dimen.size_medium))
                 .align(Alignment.CenterHorizontally)
         ) {
             Text(text = "Submit")
@@ -56,6 +59,7 @@ fun FeedbackScreen(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 fun FeedbackScreenPreview() {
     MiTuxtlaAppTheme {
-        FeedbackScreen(modifier = Modifier.fillMaxSize())
+        FeedbackScreen(modifier = Modifier
+            .fillMaxSize())
     }
 }

@@ -1,4 +1,4 @@
-package com.eonoohx.mituxtlaapp.ui
+package com.eonoohx.mituxtlaapp.ui.components
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons

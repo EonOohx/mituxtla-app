@@ -40,6 +40,28 @@ android {
 }
 
 dependencies {
+    // ViewModel Compose Library
+    implementation(libs.androidx.lifecycle.viewmodel.compose.android)
+
+    // Navigation Dependency
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
+
+    // Networking - Retrofit & OkHttp
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.okhttp)
+
+    // Image Loading
+    implementation(libs.coil.compose)
+
+    // Navigation Testing
+    androidTestImplementation(libs.androidx.navigation.testing)
+    androidTestImplementation(libs.androidx.espresso.intents)
+
+    // Coroutine Testing
+    testImplementation(libs.kotlinx.coroutines.test)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,13 +63,11 @@ fun PlaceInfoScreen(place: Any, modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(R.drawable.loading),
-            contentDescription = null,
-            modifier = Modifier
+            contentScale = ContentScale.Crop,
+            contentDescription = null, modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .aspectRatio(16 / 9f)
-                .background(color = Color.White)
-        )
+                .height(dimensionResource(R.dimen.size_large))
+                .background(color = Color.White))
         PlaceInfoField(modifier = Modifier.fillMaxWidth())
     }
 }
@@ -78,9 +77,9 @@ fun PlaceInfoField(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .padding(16.dp)
+            .padding(dimensionResource(R.dimen.padding_medium))
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
     ) {
         PlaceInfoHeader(placeName = "Place Name", modifier = modifier)
         Row(
@@ -91,8 +90,8 @@ fun PlaceInfoField(modifier: Modifier = Modifier) {
                 imageVector = Icons.Default.LocationOn,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(44.dp)
-                    .padding(end = 16.dp)
+                    .size(dimensionResource(R.dimen.icon_large))
+                    .padding(end = dimensionResource(R.dimen.padding_medium))
             )
             Text(text = "Place Address", style = MaterialTheme.typography.bodyLarge)
         }
@@ -137,6 +136,6 @@ fun PlaceInfoHeader(placeName: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 fun PlaceInfoScreenPreview() {
     MiTuxtlaAppTheme {
-        PlaceInfoScreen({}, modifier = Modifier.fillMaxSize())
+        PlaceInfoScreen(place = {}, modifier = Modifier.fillMaxSize())
     }
 }

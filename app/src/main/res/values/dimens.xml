@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="padding_tiny">1dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
+    <dimen name="icon_large">40dp</dimen>
+    <dimen name="content_card_size">60dp</dimen>
+    <dimen name="size_medium">160dp</dimen>
+    <dimen name="size_large">240dp</dimen>
 </resources>
