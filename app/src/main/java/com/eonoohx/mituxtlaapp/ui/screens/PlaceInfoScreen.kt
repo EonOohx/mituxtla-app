@@ -62,7 +62,7 @@ fun PlaceInfoScreen(place: Any, modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer)
     ) {
         Image(
-            painter = painterResource(R.drawable.loading),
+            painter = painterResource(R.drawable.ic_loading),
             contentScale = ContentScale.Crop,
             contentDescription = null, modifier = Modifier
                 .fillMaxWidth()

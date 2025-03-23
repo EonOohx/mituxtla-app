@@ -29,7 +29,7 @@ fun MiTuxtlaAppMenu(
             text = { Text(text = stringResource(R.string.appearance_button)) },
             leadingIcon = {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.routine),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_routine),
                     contentDescription = stringResource(R.string.appearance_description)
                 )
             },
@@ -39,7 +39,7 @@ fun MiTuxtlaAppMenu(
             text = { Text(text = stringResource(R.string.feedback_button)) },
             leadingIcon = {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.feedback),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_feedback),
                     contentDescription = stringResource(R.string.feedback_description)
                 )
             },

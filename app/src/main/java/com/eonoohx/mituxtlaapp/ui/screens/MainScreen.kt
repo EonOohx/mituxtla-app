@@ -1,53 +1,51 @@
 package com.eonoohx.mituxtlaapp.ui.screens
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.eonoohx.mituxtlaapp.R
+import com.eonoohx.mituxtlaapp.data.local.PlaceCategories
+import com.eonoohx.mituxtlaapp.ui.components.ContentText
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 import com.eonoohx.mituxtlaapp.ui.theme.Shape
 
 @Composable
-fun ContentScreen(
-    contentList: List<Pair<String, String>>,
-    isOnMenu: Boolean,
+fun MainScreen(
     modifier: Modifier = Modifier,
-    onSelectOptionClicked: () -> Unit,
+    onSelectOptionClicked: (String) -> Unit,
 ) {
+    val listOfCategories = PlaceCategories.listOfCategories
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(dimensionResource(R.dimen.padding_small))
     ) {
-        items(contentList) { element ->
-            Card(shape = Shape.small, onClick = onSelectOptionClicked) {
-                if (isOnMenu) MenuContentScreen(
-                    text = "Content Menu",
-                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
-                )
-                else CategoryContentScreen(
-                    text = "Content Category",
+        items(listOfCategories) { category ->
+            val categoryName = stringResource(category.title)
+            Card(
+                shape = Shape.small,
+                onClick = { onSelectOptionClicked(categoryName) }) {
+                MenuContentScreen(
+                    text = stringResource(category.title),
+                    image = category.image,
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
                 )
             }
@@ -56,15 +54,16 @@ fun ContentScreen(
 }
 
 @Composable
-fun MenuContentScreen(text: String, modifier: Modifier = Modifier) {
+fun MenuContentScreen(text: String, @DrawableRes image: Int, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         ContentText(
             text = text,
             modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
         )
         Image(
-            painter = painterResource(R.drawable.loading),
+            painter = painterResource(image),
             contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .aspectRatio(16 / 9f)
                 .background(Color.White)
@@ -72,46 +71,6 @@ fun MenuContentScreen(text: String, modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun CategoryContentScreen(text: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.BottomStart
-    ) {
-        Image(
-            painter = painterResource(R.drawable.loading),
-            contentDescription = null,
-            modifier = Modifier
-                .aspectRatio(1f)
-                .background(Color.White)
-        )
-        ContentText(
-            text = text,
-            modifier = Modifier.background(color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.7f)),
-            isOnMenu = false
-        )
-    }
-}
-
-@Composable
-fun ContentText(text: String, modifier: Modifier = Modifier, isOnMenu: Boolean = true) {
-    Box(
-        modifier = modifier.height(dimensionResource(R.dimen.content_card_size)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
-            maxLines = 2,
-            color = if (isOnMenu) MaterialTheme.colorScheme.onSecondary
-            else Color.White,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(R.dimen.padding_small))
-        )
-    }
-}
 
 @Composable
 @Preview(showBackground = true)
@@ -119,9 +78,7 @@ fun MenuContentScreenPreview() {
     val list = mutableListOf<Pair<String, String>>()
     repeat(6) { list.add(Pair("", "")) }
     MiTuxtlaAppTheme {
-        ContentScreen(
-            list,
-            isOnMenu = true,
+        MainScreen(
             onSelectOptionClicked = {},
             modifier = Modifier.fillMaxSize()
         )
@@ -134,9 +91,7 @@ fun CategoryContentScreenPreview() {
     val list = mutableListOf<Pair<String, String>>()
     repeat(6) { list.add(Pair("", "")) }
     MiTuxtlaAppTheme {
-        ContentScreen(
-            list,
-            isOnMenu = false,
+        MainScreen(
             onSelectOptionClicked = {},
             modifier = Modifier.fillMaxSize()
         )

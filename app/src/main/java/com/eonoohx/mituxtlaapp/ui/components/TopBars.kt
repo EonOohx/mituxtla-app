@@ -26,8 +26,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eonoohx.mituxtlaapp.R
+import com.eonoohx.mituxtlaapp.ui.MiTuxtlaAppScreen
+import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,13 +87,13 @@ fun MiTuxtlaTopAppBar(
             if (screenTitle != R.string.about && screenTitle != R.string.feedback
                 && screenTitle != R.string.place
             ) {
-                IconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = stringResource(R.string.search_button),
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
+//                IconButton(onClick = {}) {
+//                    Icon(
+//                        imageVector = Icons.Filled.Search,
+//                        contentDescription = stringResource(R.string.search_button),
+//                        tint = MaterialTheme.colorScheme.onPrimary
+//                    )
+//                }
 
                 when (screenTitle) {
                     R.string.app_name -> {
@@ -106,7 +109,7 @@ fun MiTuxtlaTopAppBar(
                     R.string.favorites -> {
                         IconButton(onClick = { expandedMenu = !expandedMenu }) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.filter_list),
+                                imageVector = ImageVector.vectorResource(R.drawable.ic_filter_list),
                                 contentDescription = stringResource(R.string.filter_places),
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )

@@ -33,7 +33,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
     ) {
         Image(
-            painter = painterResource(R.drawable.loading),
+            painter = painterResource(R.drawable.ic_loading),
             contentDescription = "",
             modifier = Modifier
                 .size(dimensionResource(R.dimen.size_medium))
@@ -47,7 +47,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
             Image(
-                painter = painterResource(R.drawable.eonoohx_logo),
+                painter = painterResource(R.drawable.ic_eonoohx),
                 contentDescription = null,
                 modifier = Modifier.size(dimensionResource(R.dimen.icon_large))
             )
@@ -58,7 +58,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.github_light),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_github_light),
                 contentDescription = null,
                 modifier = Modifier.size(dimensionResource(R.dimen.icon_large))
             )
