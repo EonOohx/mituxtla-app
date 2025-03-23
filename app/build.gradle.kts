@@ -53,9 +53,6 @@ dependencies {
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.okhttp)
 
-    // Image Loading
-    implementation(libs.coil.compose)
-
     // Navigation Testing
     androidTestImplementation(libs.androidx.navigation.testing)
     androidTestImplementation(libs.androidx.espresso.intents)
@@ -65,6 +62,11 @@ dependencies {
 
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
+
+    // Image Loading
+    implementation(libs.coil3.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

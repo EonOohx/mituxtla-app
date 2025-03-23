@@ -38,15 +38,11 @@ class PlacesViewModel(private val placesRepository: PlacesRepository) : ViewMode
         viewModelScope.launch {
             placesServiceUiState = PlacesServiceUiState.Loading
             placesServiceUiState = try {
-                val placesList = placesRepository.getPlacesData(placesSearch = query)
-
-                _placesUiState.update { currentUiState ->
-                    currentUiState.copy(
-                        places = placesList
+                PlacesServiceUiState.Success(
+                    placesList = placesRepository.getPlacesData(
+                        placesSearch = query
                     )
-                }
-
-                PlacesServiceUiState.Success(placesList = placesList)
+                )
             } catch (e: IOException) {
                 Log.e("Network Error", e.toString())
                 PlacesServiceUiState.Error

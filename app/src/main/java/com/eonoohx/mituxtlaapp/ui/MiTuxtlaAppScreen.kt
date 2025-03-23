@@ -80,7 +80,6 @@ fun MiTuxtlaAppScreen() {
                 composable(route = MiTuxtlaApp.CATEGORY.name) {
                     PlacesScreen(
                         placesServiceUiState = placesServiceUiState,
-                        contentList = placesUiState.value.places,
                         modifier = Modifier.fillMaxSize()
                     ) {
                         navController.navigate(route = MiTuxtlaApp.PLACE.name)

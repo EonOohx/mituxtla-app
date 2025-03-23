@@ -1,5 +1,7 @@
 [versions]
 agp = "8.8.2"
+coilCompose = "3.1.0"
+coilNetworkOkhttp = "3.1.0"
 espressoIntents = "3.6.1"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -14,7 +16,6 @@ navigationRuntimeKtx = "2.8.8"
 navigationTesting = "2.8.9"
 okhttp = "4.11.0"
 retrofit = "2.9.0"
-coil = "2.4.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
 
 [libraries]
@@ -24,7 +25,8 @@ androidx-lifecycle-viewmodel-compose-android = { module = "androidx.lifecycle:li
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose" }
 androidx-navigation-runtime-ktx = { module = "androidx.navigation:navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navigationTesting" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
+coil3-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
