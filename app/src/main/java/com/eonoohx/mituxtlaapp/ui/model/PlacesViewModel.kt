@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.eonoohx.mituxtlaapp.MiTuxtlaApplication
 import com.eonoohx.mituxtlaapp.data.PlacesRepository
 import com.eonoohx.mituxtlaapp.network.Place
+import com.eonoohx.mituxtlaapp.network.PlaceInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,14 +22,19 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface PlacesServiceUiState {
-    data class Success(val placesList: List<Place>) : PlacesServiceUiState
-    data object Error : PlacesServiceUiState
-    data object Loading : PlacesServiceUiState
+sealed interface PlacesServiceUiState<out T> {
+    data class Success<T>(val data: T) : PlacesServiceUiState<T>
+    data object Error : PlacesServiceUiState<Nothing>
+    data object Loading : PlacesServiceUiState<Nothing>
 }
 
 class PlacesViewModel(private val placesRepository: PlacesRepository) : ViewModel() {
-    var placesServiceUiState: PlacesServiceUiState by mutableStateOf(PlacesServiceUiState.Loading)
+   var listPlacesUiState: PlacesServiceUiState<List<Place>> by mutableStateOf(
+        PlacesServiceUiState.Loading)
+        private set
+
+    var placeInformationUiState: PlacesServiceUiState<PlaceInfo> by mutableStateOf(
+        PlacesServiceUiState.Loading)
         private set
 
     private var _placesUiState = MutableStateFlow(PlacesUiState())
@@ -36,11 +42,11 @@ class PlacesViewModel(private val placesRepository: PlacesRepository) : ViewMode
 
     fun getPlacesList(query: String) {
         viewModelScope.launch {
-            placesServiceUiState = PlacesServiceUiState.Loading
-            placesServiceUiState = try {
+            listPlacesUiState = PlacesServiceUiState.Loading
+            listPlacesUiState = try {
                 PlacesServiceUiState.Success(
-                    placesList = placesRepository.getPlacesData(
-                        placesSearch = query
+                    data = placesRepository.getPlacesData(
+                        search = query
                     )
                 )
             } catch (e: IOException) {
@@ -53,10 +59,27 @@ class PlacesViewModel(private val placesRepository: PlacesRepository) : ViewMode
         }
     }
 
-    fun setCurrentPlace(id: String) {
+    fun getPlaceInfo(placeId: String) {
+        viewModelScope.launch {
+            placeInformationUiState= PlacesServiceUiState.Loading
+            placeInformationUiState = try {
+                PlacesServiceUiState.Success(
+                    data = placesRepository.getPlaceInfoData(placeId = placeId)
+                )
+            }catch (e: IOException) {
+                Log.e("Network Error", e.toString())
+                PlacesServiceUiState.Error
+            } catch (e: IOException) {
+                Log.e("Network Error", e.toString())
+                PlacesServiceUiState.Error
+            }
+        }
+    }
+
+    fun setCurrentCategory(category: Int) {
         _placesUiState.update { currentUiState ->
             currentUiState.copy(
-                currentPlaceId = id
+                currentCategory = category
             )
         }
     }

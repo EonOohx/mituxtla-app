@@ -21,9 +21,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.eonoohx.mituxtlaapp.R
@@ -32,18 +30,17 @@ import com.eonoohx.mituxtlaapp.ui.components.ContentText
 import com.eonoohx.mituxtlaapp.ui.model.PlacesServiceUiState
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 import com.eonoohx.mituxtlaapp.ui.theme.Shape
-import okhttp3.OkHttpClient
 
 @Composable
 fun PlacesScreen(
-    placesServiceUiState: PlacesServiceUiState,
+    placesServiceUiState: PlacesServiceUiState<List<Place>>,
     modifier: Modifier = Modifier,
     onSelectOptionClicked: (String) -> Unit,
 ) {
     when (placesServiceUiState) {
         is PlacesServiceUiState.Loading -> LoadingScreen()
         is PlacesServiceUiState.Success -> PlacesGridScreen(
-            places = placesServiceUiState.placesList,
+            places = placesServiceUiState.data,
             modifier = modifier,
             contentPadding = PaddingValues(dimensionResource(R.dimen.padding_small))
         ) { placeId -> onSelectOptionClicked(placeId) }
@@ -87,8 +84,8 @@ fun PlacesContentScreen(text: String, imageSrc: String, modifier: Modifier = Mod
     ) {
         Log.e("Image URI", imageSrc)
         AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current).data(imageSrc).
-                crossfade(true).build(),
+            model = ImageRequest.Builder(context = LocalContext.current).data(imageSrc)
+                .crossfade(true).build(),
             error = painterResource(R.drawable.ic_broken_image),
             placeholder = painterResource(R.drawable.img_loading),
             contentDescription = text,

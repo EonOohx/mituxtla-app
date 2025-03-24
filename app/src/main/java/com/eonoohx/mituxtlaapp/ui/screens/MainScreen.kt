@@ -22,27 +22,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.eonoohx.mituxtlaapp.R
-import com.eonoohx.mituxtlaapp.data.local.PlaceCategories
+import com.eonoohx.mituxtlaapp.data.local.CategoryType
 import com.eonoohx.mituxtlaapp.ui.components.ContentText
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 import com.eonoohx.mituxtlaapp.ui.theme.Shape
 
 @Composable
 fun MainScreen(
+    listOfCategories: List<CategoryType>,
     modifier: Modifier = Modifier,
-    onSelectOptionClicked: (String) -> Unit,
+    onSelectOptionClicked: (Int) -> Unit,
 ) {
-    val listOfCategories = PlaceCategories.listOfCategories
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(dimensionResource(R.dimen.padding_small))
     ) {
-        items(listOfCategories) { category ->
-            val categoryName = stringResource(category.title)
+        items(items = listOfCategories, key = { category -> category.title }) { category ->
             Card(
                 shape = Shape.small,
-                onClick = { onSelectOptionClicked(categoryName) }) {
+                onClick = { onSelectOptionClicked(category.title) }) {
                 MenuContentScreen(
                     text = stringResource(category.title),
                     image = category.image,
@@ -75,10 +74,10 @@ fun MenuContentScreen(text: String, @DrawableRes image: Int, modifier: Modifier 
 @Composable
 @Preview(showBackground = true)
 fun MenuContentScreenPreview() {
-    val list = mutableListOf<Pair<String, String>>()
-    repeat(6) { list.add(Pair("", "")) }
+    val list = CategoryType.entries.toList()
     MiTuxtlaAppTheme {
         MainScreen(
+            listOfCategories = list,
             onSelectOptionClicked = {},
             modifier = Modifier.fillMaxSize()
         )
@@ -88,10 +87,10 @@ fun MenuContentScreenPreview() {
 @Composable
 @Preview(showBackground = true)
 fun CategoryContentScreenPreview() {
-    val list = mutableListOf<Pair<String, String>>()
-    repeat(6) { list.add(Pair("", "")) }
+    val list = CategoryType.entries.toList()
     MiTuxtlaAppTheme {
         MainScreen(
+            listOfCategories = list,
             onSelectOptionClicked = {},
             modifier = Modifier.fillMaxSize()
         )

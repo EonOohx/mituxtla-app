@@ -2,7 +2,6 @@ package com.eonoohx.mituxtlaapp.ui.screens
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -36,7 +34,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.eonoohx.mituxtlaapp.R
+import com.eonoohx.mituxtlaapp.network.PlaceInfo
+import com.eonoohx.mituxtlaapp.network.PlaceLocation
+import com.eonoohx.mituxtlaapp.ui.model.PlacesServiceUiState
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 
 private fun shareSheet(context: Context) {
@@ -55,57 +59,82 @@ private fun shareSheet(context: Context) {
 }
 
 @Composable
-fun PlaceInfoScreen(place: Any, modifier: Modifier = Modifier) {
+fun PlaceInfoScreen(
+    placesServiceUiState: PlacesServiceUiState<PlaceInfo>,
+    modifier: Modifier = Modifier
+) {
+    when (placesServiceUiState) {
+        is PlacesServiceUiState.Loading -> LoadingScreen()
+        is PlacesServiceUiState.Success -> PlaceInfoCard(data = placesServiceUiState.data)
+        is PlacesServiceUiState.Error -> ErrorScreen()
+    }
+}
+
+@Composable
+fun PlaceInfoCard(data: PlaceInfo, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer)
     ) {
-        Image(
-            painter = painterResource(R.drawable.img_loading),
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current).data(data.photoUrl)
+                .crossfade(true).build(),
+            error = painterResource(R.drawable.ic_broken_image),
+            placeholder = painterResource(R.drawable.img_loading),
+            contentDescription = null,
             contentScale = ContentScale.Crop,
-            contentDescription = null, modifier = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(dimensionResource(R.dimen.size_large))
-                .background(color = Color.White))
-        PlaceInfoField(modifier = Modifier.fillMaxWidth())
-    }
-}
-
-@Composable
-fun PlaceInfoField(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxHeight()
-            .padding(dimensionResource(R.dimen.padding_medium))
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
-    ) {
-        PlaceInfoHeader(placeName = "Place Name", modifier = modifier)
-        Row(
-            modifier = modifier.wrapContentHeight(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.LocationOn,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(dimensionResource(R.dimen.icon_large))
-                    .padding(end = dimensionResource(R.dimen.padding_medium))
-            )
-            Text(text = "Place Address", style = MaterialTheme.typography.bodyLarge)
-        }
-        Text(
-            text = "Text Description",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = modifier
+                .background(color = Color.White)
         )
+        Column(
+            modifier = modifier
+                .fillMaxHeight()
+                .padding(dimensionResource(R.dimen.padding_medium))
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
+        ) {
+            PlaceInfoHeader(placeName = data.name, saveAsFavoritePressed = {}, modifier = modifier)
+            Row(
+                modifier = modifier.wrapContentHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocationOn,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.icon_large))
+                        .padding(end = dimensionResource(R.dimen.padding_medium))
+                )
+                Column {
+                    Text(text = data.address, style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = "Lat: ${data.location.lat}, Lng: ${data.location.lng}",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
+
+            Text(
+                text = "Text Description",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = modifier
+            )
+            Text(text = "Phone: ${data.phone}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "Website: ${data.website}", style = MaterialTheme.typography.bodySmall)
+        }
     }
 }
 
 @Composable
-fun PlaceInfoHeader(placeName: String, modifier: Modifier = Modifier) {
+fun PlaceInfoHeader(
+    placeName: String,
+    saveAsFavoritePressed: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -115,19 +144,19 @@ fun PlaceInfoHeader(placeName: String, modifier: Modifier = Modifier) {
             modifier = modifier.weight(1f)
         )
         Row {
-            IconButton(onClick = {}) {
+            IconButton(onClick = saveAsFavoritePressed) {
                 Icon(
                     imageVector = Icons.Outlined.FavoriteBorder,
                     contentDescription = "Add as Favorite"
                 )
             }
-            IconButton(onClick = { shareSheet(context = context) }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Share,
-                    contentDescription = "Add as Favorite"
-                )
-            }
+//            IconButton(onClick = { shareSheet(context = context) }
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Outlined.Share,
+//                    contentDescription = "Add as Favorite"
+//                )
+//            }
         }
     }
 }
@@ -135,7 +164,20 @@ fun PlaceInfoHeader(placeName: String, modifier: Modifier = Modifier) {
 @Composable
 @Preview(showBackground = true)
 fun PlaceInfoScreenPreview() {
+    val mockPlace = PlaceInfo(
+        id = "mock_id_123",
+        name = "Mock Place",
+        rating = 4.5f, // Use a realistic rating
+        photoUrl = "https://example.com/mock_photo.jpg", // Use a sample image URL
+        address = "123 Fake Street, Test City",
+        phone = "+1 234 567 890",
+        isOpen = true,
+        website = "https://example.com",
+        location = PlaceLocation(
+            "37.7749", "-122.4194"
+        ), // Sample latitude & longitude
+    )
     MiTuxtlaAppTheme {
-        PlaceInfoScreen(place = {}, modifier = Modifier.fillMaxSize())
+        PlaceInfoCard(data = mockPlace, modifier = Modifier.fillMaxSize())
     }
 }

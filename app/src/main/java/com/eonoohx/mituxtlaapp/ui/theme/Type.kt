@@ -25,6 +25,10 @@ val Typography = Typography(
         fontFamily = andikaBold,
         fontSize = 20.sp
     ),
+    bodySmall = Typography().bodyLarge.copy(
+        fontFamily = andikaBold,
+        fontSize = 16.sp
+    ),
     labelLarge = Typography().labelLarge.copy(
         fontFamily = andikaBold
     )

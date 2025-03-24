@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -44,14 +45,17 @@ fun MiTuxtlaAppScreen() {
     val currentScreen =
         MiTuxtlaApp.valueOf(backStackEntry?.destination?.route ?: MiTuxtlaApp.MENU.name)
     val placesViewModel: PlacesViewModel = viewModel(factory = PlacesViewModel.Factory)
-    val placesServiceUiState = placesViewModel.placesServiceUiState
+    val placesServiceUiState = placesViewModel.listPlacesUiState
+    val placeInfoUiState = placesViewModel.placeInformationUiState
     val placesUiState = placesViewModel.placesUiState.collectAsState()
 
     Scaffold(
         topBar = {
             if (currentScreen.name != MiTuxtlaApp.PLACE.name) {
                 MiTuxtlaTopAppBar(
-                    screenTitle = currentScreen.title,
+                    screenTitle = if (currentScreen != MiTuxtlaApp.CATEGORY)
+                        currentScreen.title else placesUiState.value.currentCategory
+                        ?: R.string.category,
                     canNavigateUp = currentScreen.name != MiTuxtlaApp.MENU.name,
                     goFavorites = { navController.navigate(route = MiTuxtlaApp.FAVORITES.name) },
                     navigateUp = { navController.navigateUp() },
@@ -69,10 +73,13 @@ fun MiTuxtlaAppScreen() {
         ) {
             NavHost(navController = navController, startDestination = MiTuxtlaApp.MENU.name) {
                 composable(route = MiTuxtlaApp.MENU.name) {
+                    val context = LocalContext.current
                     MainScreen(
+                        listOfCategories = placesUiState.value.categories,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        placesViewModel.getPlacesList(it)
+                        placesViewModel.setCurrentCategory(it)
+                        placesViewModel.getPlacesList(context.resources.getString(it))
                         navController.navigate(MiTuxtlaApp.CATEGORY.name)
                     }
                 }
@@ -86,8 +93,18 @@ fun MiTuxtlaAppScreen() {
                     }
                 }
 
+                composable(route = MiTuxtlaApp.PLACE.name) {
+                    PlaceInfoScreen(
+                        placesServiceUiState = placeInfoUiState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(dimensionResource(R.dimen.padding_medium))
+                    )
+                }
+
                 composable(route = MiTuxtlaApp.FAVORITES.name) {
                     MainScreen(
+                        listOfCategories = placesUiState.value.categories,
                         modifier = Modifier.fillMaxSize()
                     ) {
                         navController.navigate(route = MiTuxtlaApp.PLACE.name)
@@ -96,19 +113,11 @@ fun MiTuxtlaAppScreen() {
 
                 composable(route = MiTuxtlaApp.RESULTS.name) {
                     MainScreen(
+                        listOfCategories = placesUiState.value.categories,
                         modifier = Modifier.fillMaxSize()
                     ) {
                         navController.navigate(route = MiTuxtlaApp.PLACE.name)
                     }
-                }
-
-                composable(route = MiTuxtlaApp.PLACE.name) {
-                    PlaceInfoScreen(
-                        place = {},
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-                    )
                 }
 
                 composable(route = MiTuxtlaApp.FEEDBACK.name) {
