@@ -82,7 +82,6 @@ fun PlacesContentScreen(text: String, imageSrc: String, modifier: Modifier = Mod
         modifier = modifier,
         contentAlignment = Alignment.BottomStart
     ) {
-        Log.e("Image URI", imageSrc)
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current).data(imageSrc)
                 .crossfade(true).build(),

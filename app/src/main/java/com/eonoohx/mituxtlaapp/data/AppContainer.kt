@@ -1,5 +1,6 @@
 package com.eonoohx.mituxtlaapp.data
 
+import com.eonoohx.mituxtlaapp.BuildConfig
 import com.eonoohx.mituxtlaapp.network.PlacesApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -11,7 +12,7 @@ interface AppContainer {
 }
 
 class PlacesApplication : AppContainer {
-    private val baseUri: String = "https://mituxtla-api.onrender.com"
+    private val baseUri: String = BuildConfig.BASE_URI
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUri)

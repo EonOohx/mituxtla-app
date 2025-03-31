@@ -65,7 +65,11 @@ fun PlaceInfoScreen(
 ) {
     when (placesServiceUiState) {
         is PlacesServiceUiState.Loading -> LoadingScreen()
-        is PlacesServiceUiState.Success -> PlaceInfoCard(data = placesServiceUiState.data)
+        is PlacesServiceUiState.Success -> PlaceInfoCard(
+            data = placesServiceUiState.data,
+            modifier = modifier
+        )
+
         is PlacesServiceUiState.Error -> ErrorScreen()
     }
 }
@@ -90,15 +94,15 @@ fun PlaceInfoCard(data: PlaceInfo, modifier: Modifier = Modifier) {
                 .background(color = Color.White)
         )
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxHeight()
-                .padding(dimensionResource(R.dimen.padding_medium))
+                .padding(dimensionResource(R.dimen.padding_small))
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
         ) {
-            PlaceInfoHeader(placeName = data.name, saveAsFavoritePressed = {}, modifier = modifier)
+            PlaceInfoHeader(placeName = data.name, saveAsFavoritePressed = {}, modifier = Modifier)
             Row(
-                modifier = modifier.wrapContentHeight(),
+                modifier = Modifier.wrapContentHeight(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -110,21 +114,32 @@ fun PlaceInfoCard(data: PlaceInfo, modifier: Modifier = Modifier) {
                 )
                 Column {
                     Text(text = data.address, style = MaterialTheme.typography.bodyLarge)
-                    Text(
-                        text = "Lat: ${data.location.lat}, Lng: ${data.location.lng}",
-                        style = MaterialTheme.typography.labelLarge
-                    )
+                    if (data.location != null) {
+                        Text(
+                            text = "Lat: ${data.location.lat}, Lng: ${data.location.lng}",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
                 }
             }
 
             Text(
-                text = "Text Description",
+                text = data.description,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = modifier
             )
-            Text(text = "Phone: ${data.phone}", style = MaterialTheme.typography.bodySmall)
-            Text(text = "Website: ${data.website}", style = MaterialTheme.typography.bodySmall)
+            if (data.phone != null) {
+                Text(
+                    text = "Phone: ${data.phone}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            if (data.website != null) {
+                Text(
+                    text = "Website: ${data.website}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
     }
 }
@@ -173,9 +188,8 @@ fun PlaceInfoScreenPreview() {
         phone = "+1 234 567 890",
         isOpen = true,
         website = "https://example.com",
-        location = PlaceLocation(
-            "37.7749", "-122.4194"
-        ), // Sample latitude & longitude
+        location = PlaceLocation(37.7749, -122.4194),
+        description = ""
     )
     MiTuxtlaAppTheme {
         PlaceInfoCard(data = mockPlace, modifier = Modifier.fillMaxSize())

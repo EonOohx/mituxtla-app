@@ -89,6 +89,7 @@ fun MiTuxtlaAppScreen() {
                         placesServiceUiState = placesServiceUiState,
                         modifier = Modifier.fillMaxSize()
                     ) {
+                        placesViewModel.getPlaceInfo(placeId = it)
                         navController.navigate(route = MiTuxtlaApp.PLACE.name)
                     }
                 }
