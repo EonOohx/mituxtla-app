@@ -33,7 +33,6 @@ private enum class MiTuxtlaApp(@StringRes val title: Int) {
     CATEGORY(title = R.string.category),
     PLACE(title = R.string.place),
     FAVORITES(title = R.string.favorites),
-    RESULTS(title = R.string.results),
     ABOUT(title = R.string.about),
     FEEDBACK(title = R.string.feedback),
 }
@@ -103,15 +102,6 @@ fun MiTuxtlaAppScreen() {
                 }
 
                 composable(route = MiTuxtlaApp.FAVORITES.name) {
-                    MainScreen(
-                        listOfCategories = placesUiState.value.categories,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        navController.navigate(route = MiTuxtlaApp.PLACE.name)
-                    }
-                }
-
-                composable(route = MiTuxtlaApp.RESULTS.name) {
                     MainScreen(
                         listOfCategories = placesUiState.value.categories,
                         modifier = Modifier.fillMaxSize()

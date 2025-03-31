@@ -5,11 +5,9 @@
     <string name="email">RaulAlejandro_RodriguezR@hotmail.com</string>
     <string name="menu_button">Menu button</string>
     <string name="favorites">Favorites</string>
-    <string name="search_button">Search place</string>
     <string name="favorite_places_button">See favorite places</string>
     <string name="category">Category</string>
     <string name="place">Place</string>
-    <string name="results">Results</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
     <string name="back_button">Back</string>

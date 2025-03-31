@@ -43,21 +43,6 @@ import com.eonoohx.mituxtlaapp.network.PlaceLocation
 import com.eonoohx.mituxtlaapp.ui.model.PlacesServiceUiState
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 
-private fun shareSheet(context: Context) {
-    val share = Intent.createChooser(
-        Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, "https://developer.android.com/training/sharing/")
-            putExtra(Intent.EXTRA_TEXT, "Introducing place content")
-            /**
-            data = contentUri // Here you're passing a content URI to an image to be desplayed
-            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-             **/
-        }, null
-    )
-    context.startActivity(share)
-}
-
 @Composable
 fun PlaceInfoScreen(
     placesServiceUiState: PlacesServiceUiState<PlaceInfo>,
@@ -135,7 +120,6 @@ fun PlaceInfoHeader(
     saveAsFavoritePressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = placeName,
@@ -150,13 +134,6 @@ fun PlaceInfoHeader(
                     contentDescription = "Add as Favorite"
                 )
             }
-//            IconButton(onClick = { shareSheet(context = context) }
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Outlined.Share,
-//                    contentDescription = "Add as Favorite"
-//                )
-//            }
         }
     }
 }
