@@ -83,14 +83,6 @@ fun MiTuxtlaTopAppBar(
             if (screenTitle != R.string.about && screenTitle != R.string.feedback
                 && screenTitle != R.string.place
             ) {
-//                IconButton(onClick = {}) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Search,
-//                        contentDescription = stringResource(R.string.search_button),
-//                        tint = MaterialTheme.colorScheme.onPrimary
-//                    )
-//                }
-
                 when (screenTitle) {
                     R.string.app_name -> {
                         IconButton(onClick = goFavorites) {
