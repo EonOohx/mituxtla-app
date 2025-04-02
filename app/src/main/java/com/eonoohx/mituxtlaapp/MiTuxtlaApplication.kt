@@ -14,9 +14,10 @@ class MiTuxtlaApplication : Application(), SingletonImageLoader.Factory {
     lateinit var container: AppContainer
     override fun onCreate() {
         super.onCreate()
-        container = PlacesApplication()
+        container = PlacesApplication(this) // "This" is needed to instantiate the database.
     }
 
+    // To allow getting images from URIs through OkHTTPClient
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader(this).newBuilder().components {
             add(

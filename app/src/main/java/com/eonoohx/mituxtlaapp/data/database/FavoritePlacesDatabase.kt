@@ -6,19 +6,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(entities = [Place::class, Category::class], version = 1, exportSchema = false)
-abstract class PlacesDatabase : RoomDatabase() {
+abstract class FavoritePlacesDatabase : RoomDatabase() {
     abstract fun placeDao(): PlaceDao
 
     companion object {
         @Volatile
-        private var instance: PlacesDatabase? = null
+        private var instance: FavoritePlacesDatabase? = null
 
-        fun getDatabase(context: Context): PlacesDatabase {
+        fun getDatabase(context: Context): FavoritePlacesDatabase {
             return instance ?: synchronized(this) {
                 Room.databaseBuilder(
                     context,
-                    PlacesDatabase::class.java,
-                    "place_database"
+                    FavoritePlacesDatabase::class.java,
+                    "fav_places_database"
                 ).fallbackToDestructiveMigration().build().also { instance = it }
             }
         }
