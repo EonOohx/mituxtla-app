@@ -3,7 +3,7 @@ package com.eonoohx.mituxtlaapp.data
 import android.content.Context
 import com.eonoohx.mituxtlaapp.BuildConfig
 import com.eonoohx.mituxtlaapp.data.database.FavoritePlacesDatabase
-import com.eonoohx.mituxtlaapp.network.PlacesApiService
+import com.eonoohx.mituxtlaapp.data.network.PlacesApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -28,6 +28,7 @@ class PlacesApplication(private val context: Context) : AppContainer {
     override val placesRepository: PlacesRepository by lazy {
         NetworkPlacesRepository(retrofitService)
     }
+
     override val databaseRepository: DatabaseRepository by lazy {
         UserPlacesRepository(FavoritePlacesDatabase.getDatabase(context).placeDao())
     }

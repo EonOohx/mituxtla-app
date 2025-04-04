@@ -38,8 +38,8 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.eonoohx.mituxtlaapp.R
-import com.eonoohx.mituxtlaapp.network.PlaceInfo
-import com.eonoohx.mituxtlaapp.network.PlaceLocation
+import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
+import com.eonoohx.mituxtlaapp.data.network.PlaceLocation
 import com.eonoohx.mituxtlaapp.ui.model.PlacesServiceUiState
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 

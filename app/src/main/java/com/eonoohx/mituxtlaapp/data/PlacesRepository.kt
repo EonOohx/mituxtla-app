@@ -1,8 +1,8 @@
 package com.eonoohx.mituxtlaapp.data
 
-import com.eonoohx.mituxtlaapp.network.Place
-import com.eonoohx.mituxtlaapp.network.PlaceInfo
-import com.eonoohx.mituxtlaapp.network.PlacesApiService
+import com.eonoohx.mituxtlaapp.data.network.Place
+import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
+import com.eonoohx.mituxtlaapp.data.network.PlacesApiService
 
 interface PlacesRepository {
     suspend fun getPlacesData(search: String): List<Place>

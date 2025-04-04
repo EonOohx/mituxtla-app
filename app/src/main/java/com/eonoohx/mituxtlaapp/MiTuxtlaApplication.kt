@@ -12,12 +12,13 @@ import java.util.concurrent.TimeUnit
 
 class MiTuxtlaApplication : Application(), SingletonImageLoader.Factory {
     lateinit var container: AppContainer
+
     override fun onCreate() {
         super.onCreate()
-        container = PlacesApplication(this) // "This" is needed to instantiate the database.
+        container = PlacesApplication(this) // "This" is required to instantiate the database.
     }
 
-    // To allow getting images from URIs through OkHTTPClient
+    // Allows retrieving images from URLs using OkHttpClient
     override fun newImageLoader(context: PlatformContext): ImageLoader {
         return ImageLoader(this).newBuilder().components {
             add(

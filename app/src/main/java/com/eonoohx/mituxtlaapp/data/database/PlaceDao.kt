@@ -5,22 +5,24 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlaceDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(place: Place) // Entity Place here
+    suspend fun insert(favoritePlace: FavoritePlace) // Entity Place here
 
     @Delete
-    suspend fun delete(place: Place)
+    suspend fun delete(favoritePlace: FavoritePlace)
 
-    @Query("SELECT id, name, photo_url, category_id, viewed from place ORDER BY name ASC") // ASC ordering in ascending order
-    fun getPlaces(): Flow<List<Place>>
+    @Transaction
+    @Query("SELECT id, name, photo_url, category, viewed FROM place ORDER BY viewed ASC") // ASC ordering in ascending order
+    fun getPlaces(): Flow<List<FavoritePlace>>
 
-    @Query("SELECT * from place WHERE id = :id")
-    fun getPlace(id: Int): Flow<Place>
+    @Query("SELECT * FROM place WHERE id = :id")
+    fun getPlace(id: String): Flow<FavoritePlace>
 
     @Query("UPDATE place SET viewed = CURRENT_TIMESTAMP WHERE id = :id")
-    suspend fun updatePlaceStatus(id: Int)
+    suspend fun updatePlaceStatus(id: String)
 }

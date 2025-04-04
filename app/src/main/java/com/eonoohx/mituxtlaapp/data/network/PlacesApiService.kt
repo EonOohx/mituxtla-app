@@ -1,4 +1,4 @@
-package com.eonoohx.mituxtlaapp.network
+package com.eonoohx.mituxtlaapp.data.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query

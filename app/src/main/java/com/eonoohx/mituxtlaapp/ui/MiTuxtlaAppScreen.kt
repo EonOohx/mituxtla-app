@@ -43,10 +43,12 @@ fun MiTuxtlaAppScreen() {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen =
         MiTuxtlaApp.valueOf(backStackEntry?.destination?.route ?: MiTuxtlaApp.MENU.name)
+
     val placesViewModel: PlacesViewModel = viewModel(factory = PlacesViewModel.Factory)
     val placesServiceUiState = placesViewModel.listPlacesUiState
     val placeInfoUiState = placesViewModel.placeInformationUiState
     val placesUiState = placesViewModel.placesUiState.collectAsState()
+    val favoritePlacesUiState = placesViewModel.favoritePlaceUiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -103,12 +105,7 @@ fun MiTuxtlaAppScreen() {
                 }
 
                 composable(route = MiTuxtlaApp.FAVORITES.name) {
-                    MainScreen(
-                        listOfCategories = placesUiState.value.categories,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        navController.navigate(route = MiTuxtlaApp.PLACE.name)
-                    }
+                    Places
                 }
 
                 composable(route = MiTuxtlaApp.FEEDBACK.name) {

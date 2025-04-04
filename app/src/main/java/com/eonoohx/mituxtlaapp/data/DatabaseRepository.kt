@@ -1,29 +1,32 @@
 package com.eonoohx.mituxtlaapp.data
 
-import com.eonoohx.mituxtlaapp.data.database.Place
+import com.eonoohx.mituxtlaapp.data.database.FavoritePlace
 import com.eonoohx.mituxtlaapp.data.database.PlaceDao
 import kotlinx.coroutines.flow.Flow
 
 interface DatabaseRepository {
-    fun getAllFavoritePlacesStream(): Flow<List<Place>>
+    fun getAllFavoritePlacesStream(): Flow<List<FavoritePlace>>
 
-    fun getFavoritePlace(id: Int): Flow<Place>
+    fun getFavoritePlace(id: String): Flow<FavoritePlace>
 
-    suspend fun insertFavoritePlace(place: Place)
+    suspend fun insertFavoritePlace(favoritePlace: FavoritePlace)
 
-    suspend fun updateFavoritePlaceStatus(id: Int)
+    suspend fun updateFavoritePlaceStatus(id: String)
 
-    suspend fun deleteFavoritePlace(place: Place)
+    suspend fun deleteFavoritePlace(favoritePlace: FavoritePlace)
 }
 
 class UserPlacesRepository(private val placeDao: PlaceDao) : DatabaseRepository {
-    override fun getAllFavoritePlacesStream(): Flow<List<Place>> = placeDao.getPlaces()
 
-    override fun getFavoritePlace(id: Int): Flow<Place> = placeDao.getPlace(id)
+    override fun getAllFavoritePlacesStream(): Flow<List<FavoritePlace>> = placeDao.getPlaces()
 
-    override suspend fun insertFavoritePlace(place: Place) = placeDao.insert(place)
+    override fun getFavoritePlace(id: String): Flow<FavoritePlace> = placeDao.getPlace(id)
 
-    override suspend fun updateFavoritePlaceStatus(id: Int) = placeDao.updatePlaceStatus(id)
+    override suspend fun insertFavoritePlace(favoritePlace: FavoritePlace) =
+        placeDao.insert(favoritePlace)
 
-    override suspend fun deleteFavoritePlace(place: Place) = placeDao.delete(place)
+    override suspend fun updateFavoritePlaceStatus(id: String) = placeDao.updatePlaceStatus(id)
+
+    override suspend fun deleteFavoritePlace(favoritePlace: FavoritePlace) =
+        placeDao.delete(favoritePlace)
 }

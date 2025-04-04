@@ -3,9 +3,11 @@ package com.eonoohx.mituxtlaapp.ui.components
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,10 +19,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.eonoohx.mituxtlaapp.R
 
 @Composable
@@ -63,5 +70,28 @@ fun StateScreen(
             )
         )
         Text(text = stringResource(message))
+    }
+}
+
+@Composable
+fun PlacesContentScreen(text: String, imageSrc: String, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.BottomStart
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current).data(imageSrc)
+                .crossfade(true).build(),
+            error = painterResource(R.drawable.ic_broken_image),
+            placeholder = painterResource(R.drawable.img_loading),
+            contentDescription = text,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.aspectRatio(1f)
+        )
+        ContentText(
+            text = text,
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.7f)),
+            isOnMenu = false
+        )
     }
 }

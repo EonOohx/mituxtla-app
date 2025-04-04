@@ -2,40 +2,23 @@ package com.eonoohx.mituxtlaapp.data.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "place", foreignKeys = [
-        ForeignKey(
-            entity = Category::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("category_id"),
-            onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.SET_NULL
-        )
-    ]
-)
-data class Place(
+@Entity(tableName = "place")
+data class FavoritePlace(
     @PrimaryKey
-    val id: Int,
-    @ColumnInfo(name = "category_id")
-    val categoryId: Int?,
+    val id: String,
     val name: String,
-    val address: String,
-    val description: String,
+    val category: String,
     @ColumnInfo(name = "photo_url")
     val photoUrl: String,
-    @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
-    val viewed: Boolean,
-    val location: String?,
-    val phone: String?,
-    val website: String?
-)
-
-@Entity(tableName = "category")
-data class Category(
-    @PrimaryKey
-    val id: Int,
-    val name: String
+    val viewed: String,
+    val address: String?,
+    val description: String?,
+    @ColumnInfo(name = "lat_location")
+    val latLocation: String? = null,
+    @ColumnInfo(name = "lng_location")
+    val lngLocation: String? = null,
+    val phone: String? = null,
+    val website: String? = null
 )
