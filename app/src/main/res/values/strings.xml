@@ -17,8 +17,9 @@
     <string name="appearance_description">Switch Appearance</string>
     <string name="feedback_button">Send Feedback</string>
     <string name="feedback_description">Send feedback</string>
-    <string name="category_option">Category</string>
-    <string name="viewed_option">Viewed</string>
+    <string name="by_category">Category</string>
+    <string name="by_latest">latest</string>
+    <string name="by_name">Name</string>
     <string name="loading_message">Loading places</string>
     <string name="failed_connection_message">We have a network error</string>
     <string name="failed_connection_description">Network error</string>

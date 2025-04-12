@@ -1,10 +1,9 @@
-package com.eonoohx.mituxtlaapp.ui.screens
+package com.eonoohx.mituxtlaapp.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.eonoohx.mituxtlaapp.R
-import com.eonoohx.mituxtlaapp.ui.components.StateScreen
 
 @Composable
 fun LoadingScreen(

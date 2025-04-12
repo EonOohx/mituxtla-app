@@ -49,16 +49,19 @@ android {
 
 dependencies {
     // ViewModel Compose Library
-    implementation(libs.androidx.lifecycle.viewmodel.compose.android)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Navigation Dependency
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.navigation.compose)
+
 
     // Networking - Retrofit & OkHttp
     implementation(libs.retrofit)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.okhttp)
+    implementation(libs.androidx.junit.ktx)
+
 
     // Navigation Testing
     androidTestImplementation(libs.androidx.navigation.testing)
@@ -79,6 +82,8 @@ dependencies {
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation(libs.androidx.room.ktx)
 
+    // Testing
+    androidTestImplementation(libs.androidx.espresso.core)
 
 
     implementation(libs.androidx.core.ktx)

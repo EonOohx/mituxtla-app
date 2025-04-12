@@ -1,14 +1,9 @@
 package com.eonoohx.mituxtlaapp.data.network
 
+import com.eonoohx.mituxtlaapp.data.PlaceDetailsItem
+import com.eonoohx.mituxtlaapp.data.PlaceItem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-sealed interface PlaceElement {
-    val id: String
-    val name: String
-    val rating: Float
-    val photoUrl: String
-}
 
 @Serializable
 data class Place(
@@ -16,21 +11,23 @@ data class Place(
     override val name: String,
     override val rating: Float,
     @SerialName(value = "photo_url") override val photoUrl: String
-) : PlaceElement
+) : PlaceItem
 
 @Serializable
 data class PlaceInfo(
     override val id: String,
     override val name: String,
-    override val rating: Float,
-    @SerialName(value = "photo_url") override val photoUrl: String,
-    val address: String,
+    override val rating: Float?,
+    @SerialName(value = "photo_url")
+    override val photoUrl: String,
+    override val description: String?,
+    override val address: String,
+    override val website: String?,
+    override val phone: String?,
     val location: PlaceLocation?,
-    @SerialName(value = "is_open") val isOpen: Boolean?,
-    val website: String?,
-    val phone: String?,
-    val description: String
-) : PlaceElement
+    @SerialName(value = "is_open")
+    val isOpen: Boolean?,
+) : PlaceItem, PlaceDetailsItem
 
 @Serializable
 data class PlaceLocation(

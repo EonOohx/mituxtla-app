@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,9 +22,10 @@ import androidx.navigation.compose.rememberNavController
 import com.eonoohx.mituxtlaapp.R
 import com.eonoohx.mituxtlaapp.ui.components.MiTuxtlaTopAppBar
 import com.eonoohx.mituxtlaapp.ui.components.PlaceInfoTopBar
-import com.eonoohx.mituxtlaapp.ui.model.PlacesViewModel
+import com.eonoohx.mituxtlaapp.ui.model.MiTuxtlaViewModel
 import com.eonoohx.mituxtlaapp.ui.screens.AboutScreen
-import com.eonoohx.mituxtlaapp.ui.screens.FeedbackScreen
+import com.eonoohx.mituxtlaapp.ui.screens.FavoritePlaceInfoScreen
+import com.eonoohx.mituxtlaapp.ui.screens.FavoritePlaceScreen
 import com.eonoohx.mituxtlaapp.ui.screens.MainScreen
 import com.eonoohx.mituxtlaapp.ui.screens.PlaceInfoScreen
 import com.eonoohx.mituxtlaapp.ui.screens.PlacesScreen
@@ -34,36 +36,38 @@ private enum class MiTuxtlaApp(@StringRes val title: Int) {
     PLACE(title = R.string.place),
     FAVORITES(title = R.string.favorites),
     ABOUT(title = R.string.about),
-    FEEDBACK(title = R.string.feedback),
 }
 
 @Composable
-fun MiTuxtlaAppScreen() {
-    val navController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen =
-        MiTuxtlaApp.valueOf(backStackEntry?.destination?.route ?: MiTuxtlaApp.MENU.name)
+fun MiTuxtlaAppScreen(
+    navController: NavHostController = rememberNavController(),
+) {
+    val miTuxtlaViewModel: MiTuxtlaViewModel = viewModel(factory = MiTuxtlaViewModel.Factory)
 
-    val placesViewModel: PlacesViewModel = viewModel(factory = PlacesViewModel.Factory)
-    val placesServiceUiState = placesViewModel.listPlacesUiState
-    val placeInfoUiState = placesViewModel.placeInformationUiState
-    val placesUiState = placesViewModel.placesUiState.collectAsState()
-    val favoritePlacesUiState = placesViewModel.favoritePlaceUiState.collectAsState()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = MiTuxtlaApp.valueOf(
+        backStackEntry?.destination?.route
+            ?: MiTuxtlaApp.MENU.name
+    )
+
+    val placesUiState by miTuxtlaViewModel.miTuxtlaUiState.collectAsState()
+
 
     Scaffold(
         topBar = {
             if (currentScreen.name != MiTuxtlaApp.PLACE.name) {
                 MiTuxtlaTopAppBar(
                     screenTitle = if (currentScreen != MiTuxtlaApp.CATEGORY)
-                        currentScreen.title else placesUiState.value.currentCategory
+                        currentScreen.title else placesUiState.currentCategory
                         ?: R.string.category,
                     canNavigateUp = currentScreen.name != MiTuxtlaApp.MENU.name,
-                    goFavorites = { navController.navigate(route = MiTuxtlaApp.FAVORITES.name) },
                     navigateUp = { navController.navigateUp() },
-                    onFeedbackSelected = { navController.navigate(route = MiTuxtlaApp.FEEDBACK.name) },
-                    onAboutSelected = { navController.navigate(route = MiTuxtlaApp.ABOUT.name) }
+                    onAboutSelected = { navController.navigate(route = MiTuxtlaApp.ABOUT.name) },
+                    onFavoritesSelected = { navController.navigate(route = MiTuxtlaApp.FAVORITES.name) },
                 )
-            } else PlaceInfoTopBar(navigateUp = { navController.navigateUp() })
+            } else PlaceInfoTopBar(navigateUp = {
+                navController.navigateUp()
+            })
         },
     ) { innerPadding ->
         Surface(
@@ -76,55 +80,88 @@ fun MiTuxtlaAppScreen() {
                 composable(route = MiTuxtlaApp.MENU.name) {
                     val context = LocalContext.current
                     MainScreen(
-                        listOfCategories = placesUiState.value.categories,
+                        listOfCategories = placesUiState.categories,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        placesViewModel.setCurrentCategory(it)
-                        placesViewModel.getPlacesList(context.resources.getString(it))
+                        miTuxtlaViewModel.setCurrentCategory(it)
+                        miTuxtlaViewModel.getApiPlacesList(context.resources.getString(it))
                         navController.navigate(MiTuxtlaApp.CATEGORY.name)
                     }
                 }
 
                 composable(route = MiTuxtlaApp.CATEGORY.name) {
+                    val placesServiceUiState = miTuxtlaViewModel.listPlacesUiState
+
                     PlacesScreen(
-                        placesServiceUiState = placesServiceUiState,
+                        placeServiceUiState = placesServiceUiState,
                         modifier = Modifier.fillMaxSize()
-                    ) {
-                        placesViewModel.getPlaceInfo(placeId = it)
+                    ) { placeId ->
+                        miTuxtlaViewModel.getApiPlaceInfo(placeId = placeId)
+                        miTuxtlaViewModel.viewFavoritePlace(viewing = false)
+                        navController.navigate(route = MiTuxtlaApp.PLACE.name)
+                    }
+                }
+
+                composable(route = MiTuxtlaApp.FAVORITES.name) {
+                    val favoritePlaceUiState
+                            by miTuxtlaViewModel.favoritePlaceUiState.collectAsState()
+
+                    FavoritePlaceScreen(
+                        listFavoritePlaces = favoritePlaceUiState.favoritePlacesList,
+                    ) { placeId ->
+                        miTuxtlaViewModel.loadFavoritePlace(placeId)
+                        miTuxtlaViewModel.viewFavoritePlace(viewing = true)
                         navController.navigate(route = MiTuxtlaApp.PLACE.name)
                     }
                 }
 
                 composable(route = MiTuxtlaApp.PLACE.name) {
-                    PlaceInfoScreen(
-                        placesServiceUiState = placeInfoUiState,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-                    )
-                }
+                    val placeInfoUiState = miTuxtlaViewModel.placeInfoUiState
+                    Surface {
+                        if (!placesUiState.forViewFavoritePlace) {
+                            PlaceInfoScreen(
+                                placeServiceUiState = placeInfoUiState,
+                                miTuxtlaUiState = placesUiState,
+                                currentCategory = placesUiState.currentCategory!!,
+                                onDeleteAsFavorite = { placeId ->
+                                    miTuxtlaViewModel.deleteFavoritePlace(placeId)
+                                },
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(dimensionResource(R.dimen.padding_medium))
+                            ) { place, category ->
+                                miTuxtlaViewModel.savePlace(place, category)
+                            }
+                        } else {
+                            val favoritePlaceDetailsUiState
+                                    by miTuxtlaViewModel.favoritePlaceDetailsUiState.collectAsState()
 
-                composable(route = MiTuxtlaApp.FAVORITES.name) {
-                    Places
-                }
-
-                composable(route = MiTuxtlaApp.FEEDBACK.name) {
-                    FeedbackScreen(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-                    )
+                            FavoritePlaceInfoScreen(
+                                place = favoritePlaceDetailsUiState.favoritePlaceDetails,
+                                miTuxtlaUiState = placesUiState,
+                                onDeleteAsFavorite = { placeId ->
+                                    miTuxtlaViewModel.deleteFavoritePlace(placeId)
+                                },
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(dimensionResource(R.dimen.padding_medium))
+                            ) { place, category ->
+                                miTuxtlaViewModel.savePlace(place, category)
+                            }
+                        }
+                    }
                 }
 
                 composable(route = MiTuxtlaApp.ABOUT.name) {
-                    AboutScreen(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-                    )
+                    Surface {
+                        AboutScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(dimensionResource(R.dimen.padding_medium))
+                        )
+                    }
                 }
             }
-
         }
     }
 }

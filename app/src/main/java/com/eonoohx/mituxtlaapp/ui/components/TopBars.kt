@@ -33,10 +33,9 @@ import com.eonoohx.mituxtlaapp.R
 fun MiTuxtlaTopAppBar(
     @StringRes screenTitle: Int,
     canNavigateUp: Boolean,
-    goFavorites: () -> Unit,
     navigateUp: () -> Unit,
-    onFeedbackSelected: () -> Unit,
     onAboutSelected: () -> Unit,
+    onFavoritesSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expandedMenu by remember { mutableStateOf(false) }
@@ -74,7 +73,6 @@ fun MiTuxtlaTopAppBar(
                 MiTuxtlaAppMenu(
                     expanded = expandedMenu,
                     onDismissRequest = { expandedMenu = false },
-                    onFeedbackOptionSelected = onFeedbackSelected,
                     onAboutOptionSelected = onAboutSelected
                 )
             }
@@ -85,7 +83,7 @@ fun MiTuxtlaTopAppBar(
             ) {
                 when (screenTitle) {
                     R.string.app_name -> {
-                        IconButton(onClick = goFavorites) {
+                        IconButton(onClick = onFavoritesSelected) {
                             Icon(
                                 imageVector = Icons.TwoTone.Favorite,
                                 contentDescription = stringResource(R.string.favorite_places_button),
@@ -104,7 +102,8 @@ fun MiTuxtlaTopAppBar(
                         }
                         PlaceFilterMenu(
                             expanded = expandedMenu,
-                            onDismissRequest = { expandedMenu = false }
+                            onDismissRequest = { expandedMenu = false },
+                            onOrderBy = {}
                         )
                     }
                 }

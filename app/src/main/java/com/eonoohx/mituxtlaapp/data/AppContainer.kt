@@ -3,7 +3,7 @@ package com.eonoohx.mituxtlaapp.data
 import android.content.Context
 import com.eonoohx.mituxtlaapp.BuildConfig
 import com.eonoohx.mituxtlaapp.data.database.FavoritePlacesDatabase
-import com.eonoohx.mituxtlaapp.data.network.PlacesApiService
+import com.eonoohx.mituxtlaapp.data.network.PlaceApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -21,8 +21,8 @@ class PlacesApplication(private val context: Context) : AppContainer {
         .baseUrl(baseUri)
         .build()
 
-    private val retrofitService: PlacesApiService by lazy {
-        retrofit.create(PlacesApiService::class.java)
+    private val retrofitService: PlaceApiService by lazy {
+        retrofit.create(PlaceApiService::class.java)
     }
 
     override val placesRepository: PlacesRepository by lazy {

@@ -2,17 +2,17 @@ package com.eonoohx.mituxtlaapp.data
 
 import com.eonoohx.mituxtlaapp.data.network.Place
 import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
-import com.eonoohx.mituxtlaapp.data.network.PlacesApiService
+import com.eonoohx.mituxtlaapp.data.network.PlaceApiService
 
 interface PlacesRepository {
     suspend fun getPlacesData(search: String): List<Place>
     suspend fun getPlaceInfoData(placeId: String): PlaceInfo
 }
 
-class NetworkPlacesRepository(private val placesApiService: PlacesApiService) : PlacesRepository {
+class NetworkPlacesRepository(private val placeApiService: PlaceApiService) : PlacesRepository {
     override suspend fun getPlacesData(search: String): List<Place> =
-        placesApiService.getPlaces(search)
+        placeApiService.getPlaces(search)
 
     override suspend fun getPlaceInfoData(placeId: String): PlaceInfo =
-        placesApiService.getPlaceInfo(placeId)
+        placeApiService.getPlaceInfo(placeId)
 }

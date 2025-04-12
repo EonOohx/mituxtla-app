@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [FavoritePlace::class], version = 1, exportSchema = false)
+@Database(entities = [FavoritePlace::class], version = 2, exportSchema = false)
 abstract class FavoritePlacesDatabase : RoomDatabase() {
 
     abstract fun placeDao(): PlaceDao
@@ -20,7 +20,7 @@ abstract class FavoritePlacesDatabase : RoomDatabase() {
                     context,
                     FavoritePlacesDatabase::class.java,
                     "fav_places_database"
-                ).fallbackToDestructiveMigration().build().also { Instance = it }
+                ).fallbackToDestructiveMigration(true).build().also { Instance = it }
             }
         }
     }

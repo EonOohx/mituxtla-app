@@ -15,7 +15,8 @@ object FakeDataSource {
             latLocation = "29.9792",
             lngLocation = "31.1342",
             phone = "+20 2 3377 6936",
-            website = "https://www.egypt.travel/en/attractions/great-pyramid-of-giza"
+            website = "https://www.egypt.travel/en/attractions/great-pyramid-of-giza",
+            rating = 0.0f
         ),
         FavoritePlace(
             id = "place_002",
@@ -28,7 +29,8 @@ object FakeDataSource {
             latLocation = "-13.1631",
             lngLocation = "-72.5450",
             phone = "+51 84 582030",
-            website = "https://www.machupicchu.gob.pe"
+            website = "https://www.machupicchu.gob.pe",
+            rating = 0.0f
         ),
         FavoritePlace(
             id = "place_003",
@@ -41,7 +43,8 @@ object FakeDataSource {
             latLocation = "27.1751",
             lngLocation = "78.0421",
             phone = "+91 562 222 7261",
-            website = "https://www.tajmahal.gov.in"
+            website = "https://www.tajmahal.gov.in",
+            rating = 0.0f
         )
     )
 

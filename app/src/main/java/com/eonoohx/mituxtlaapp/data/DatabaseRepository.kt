@@ -14,6 +14,8 @@ interface DatabaseRepository {
     suspend fun updateFavoritePlaceStatus(id: String)
 
     suspend fun deleteFavoritePlace(favoritePlace: FavoritePlace)
+
+    suspend fun exists(id: String): Boolean
 }
 
 class UserPlacesRepository(private val placeDao: PlaceDao) : DatabaseRepository {
@@ -29,4 +31,6 @@ class UserPlacesRepository(private val placeDao: PlaceDao) : DatabaseRepository 
 
     override suspend fun deleteFavoritePlace(favoritePlace: FavoritePlace) =
         placeDao.delete(favoritePlace)
+
+    override suspend fun exists(id: String): Boolean = placeDao.exists(id)
 }

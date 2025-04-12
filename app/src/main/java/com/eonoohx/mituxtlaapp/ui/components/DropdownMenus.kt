@@ -20,7 +20,6 @@ import com.eonoohx.mituxtlaapp.R
 fun MiTuxtlaAppMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    onFeedbackOptionSelected: () -> Unit,
     onAboutOptionSelected: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -34,16 +33,6 @@ fun MiTuxtlaAppMenu(
                 )
             },
             onClick = {},
-        )
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.feedback_button)) },
-            leadingIcon = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_feedback),
-                    contentDescription = stringResource(R.string.feedback_description)
-                )
-            },
-            onClick = onFeedbackOptionSelected,
         )
         HorizontalDivider()
         DropdownMenuItem(
@@ -63,6 +52,7 @@ fun MiTuxtlaAppMenu(
 fun PlaceFilterMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
+    onOrderBy: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     DropdownMenu(
@@ -71,12 +61,14 @@ fun PlaceFilterMenu(
         modifier = modifier.width(160.dp)
     ) {
         DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.category_option)) },
+            text = { Text(text = stringResource(R.string.by_category)) },
             onClick = {}
         )
         DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.viewed_option)) },
+            text = { Text(text = stringResource(R.string.by_latest)) },
             onClick = {}
+        )
+        DropdownMenuItem(text = { Text(text = stringResource(R.string.by_name)) }, onClick = {}
         )
     }
 }

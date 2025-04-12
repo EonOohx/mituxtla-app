@@ -1,7 +1,5 @@
 package com.eonoohx.mituxtlaapp.ui.screens
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
@@ -25,6 +24,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +35,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -40,27 +44,55 @@ import coil3.request.crossfade
 import com.eonoohx.mituxtlaapp.R
 import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
 import com.eonoohx.mituxtlaapp.data.network.PlaceLocation
-import com.eonoohx.mituxtlaapp.ui.model.PlacesServiceUiState
+import com.eonoohx.mituxtlaapp.ui.components.ErrorScreen
+import com.eonoohx.mituxtlaapp.ui.components.LoadingScreen
+import com.eonoohx.mituxtlaapp.ui.model.PlaceServiceUiState
+import com.eonoohx.mituxtlaapp.ui.model.MiTuxtlaUiState
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 
 @Composable
 fun PlaceInfoScreen(
-    placesServiceUiState: PlacesServiceUiState<PlaceInfo>,
-    modifier: Modifier = Modifier
+    placeServiceUiState: PlaceServiceUiState<PlaceInfo>,
+    miTuxtlaUiState: MiTuxtlaUiState,
+    currentCategory: Int,
+    modifier: Modifier = Modifier,
+    onDeleteAsFavorite: (id: String) -> Unit,
+    onSavedAsFavorite: (place: PlaceInfo, category: String) -> Unit,
 ) {
-    when (placesServiceUiState) {
-        is PlacesServiceUiState.Loading -> LoadingScreen()
-        is PlacesServiceUiState.Success -> PlaceInfoCard(
-            data = placesServiceUiState.data,
-            modifier = modifier
-        )
+    val category = stringResource(currentCategory)
+    var markedAsFavorite by remember { mutableStateOf(miTuxtlaUiState.forViewFavoritePlace) }
 
-        is PlacesServiceUiState.Error -> ErrorScreen()
+    when (placeServiceUiState) {
+        is PlaceServiceUiState.Loading -> LoadingScreen()
+        is PlaceServiceUiState.Success -> {
+            val place = placeServiceUiState.data
+
+            PlaceInfoCard(
+                data = place,
+                onSavedFavorite = {
+                    markedAsFavorite = !markedAsFavorite
+                    if (miTuxtlaUiState.forViewFavoritePlace) {
+                        if (!markedAsFavorite) onDeleteAsFavorite(place.id)
+                    } else {
+                        if (markedAsFavorite) onSavedAsFavorite(place, category)
+                    }
+                },
+                isSavedAsFavorite = markedAsFavorite,
+                modifier = modifier
+            )
+        }
+
+        is PlaceServiceUiState.Error -> ErrorScreen()
     }
 }
 
 @Composable
-fun PlaceInfoCard(data: PlaceInfo, modifier: Modifier = Modifier) {
+fun PlaceInfoCard(
+    data: PlaceInfo,
+    onSavedFavorite: () -> Unit,
+    isSavedAsFavorite: Boolean,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
@@ -85,7 +117,24 @@ fun PlaceInfoCard(data: PlaceInfo, modifier: Modifier = Modifier) {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
         ) {
-            PlaceInfoHeader(placeName = data.name, saveAsFavoritePressed = {}, modifier = Modifier)
+            // HEADER
+            Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = data.name,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = modifier.weight(1f)
+                )
+                Row {
+                    IconButton(onClick = onSavedFavorite) {
+                        Icon(
+                            imageVector = if (isSavedAsFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Add as Favorite"
+                        )
+                    }
+                }
+            }
+            // BODY
             Row(
                 modifier = Modifier.wrapContentHeight(),
                 verticalAlignment = Alignment.CenterVertically
@@ -109,7 +158,7 @@ fun PlaceInfoCard(data: PlaceInfo, modifier: Modifier = Modifier) {
             }
 
             Text(
-                text = data.description,
+                text = data.description ?: "",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
@@ -123,30 +172,6 @@ fun PlaceInfoCard(data: PlaceInfo, modifier: Modifier = Modifier) {
                 Text(
                     text = "Website: ${data.website}",
                     style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun PlaceInfoHeader(
-    placeName: String,
-    saveAsFavoritePressed: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = placeName,
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = modifier.weight(1f)
-        )
-        Row {
-            IconButton(onClick = saveAsFavoritePressed) {
-                Icon(
-                    imageVector = Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Add as Favorite"
                 )
             }
         }
@@ -169,6 +194,11 @@ fun PlaceInfoScreenPreview() {
         description = ""
     )
     MiTuxtlaAppTheme {
-        PlaceInfoCard(data = mockPlace, modifier = Modifier.fillMaxSize())
+        PlaceInfoCard(
+            data = mockPlace,
+            isSavedAsFavorite = true,
+            onSavedFavorite = {},
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }

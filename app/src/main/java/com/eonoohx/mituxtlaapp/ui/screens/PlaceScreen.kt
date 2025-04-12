@@ -14,26 +14,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eonoohx.mituxtlaapp.R
 import com.eonoohx.mituxtlaapp.data.network.Place
+import com.eonoohx.mituxtlaapp.ui.components.ErrorScreen
+import com.eonoohx.mituxtlaapp.ui.components.LoadingScreen
 import com.eonoohx.mituxtlaapp.ui.components.PlacesContentScreen
-import com.eonoohx.mituxtlaapp.ui.model.PlacesServiceUiState
+import com.eonoohx.mituxtlaapp.ui.model.PlaceServiceUiState
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
 import com.eonoohx.mituxtlaapp.ui.theme.Shape
 
 @Composable
 fun PlacesScreen(
-    placesServiceUiState: PlacesServiceUiState<List<Place>>,
+    placeServiceUiState: PlaceServiceUiState<List<Place>>,
     modifier: Modifier = Modifier,
     onSelectOptionClicked: (String) -> Unit,
 ) {
-    when (placesServiceUiState) {
-        is PlacesServiceUiState.Loading -> LoadingScreen()
-        is PlacesServiceUiState.Success -> PlacesGridScreen(
-            places = placesServiceUiState.data,
+    when (placeServiceUiState) {
+        is PlaceServiceUiState.Loading -> LoadingScreen()
+        is PlaceServiceUiState.Success -> PlacesGridScreen(
+            places = placeServiceUiState.data,
             modifier = modifier,
             contentPadding = PaddingValues(dimensionResource(R.dimen.padding_small))
         ) { placeId -> onSelectOptionClicked(placeId) }
 
-        is PlacesServiceUiState.Error -> ErrorScreen()
+        is PlaceServiceUiState.Error -> ErrorScreen()
     }
 }
 

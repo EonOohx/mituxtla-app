@@ -24,7 +24,7 @@ class MiTuxtlaApplication : Application(), SingletonImageLoader.Factory {
             add(
                 OkHttpNetworkFetcherFactory(
                     callFactory = OkHttpClient.Builder().followRedirects(true)
-                        .readTimeout(8000, TimeUnit.MILLISECONDS).build()
+                        .readTimeout(10000, TimeUnit.MILLISECONDS).build()
                 )
             )
         }.build()
