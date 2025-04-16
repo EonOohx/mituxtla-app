@@ -18,8 +18,8 @@
     <string name="feedback_button">Send Feedback</string>
     <string name="feedback_description">Send feedback</string>
     <string name="by_category">Category</string>
-    <string name="by_latest">latest</string>
-    <string name="by_name">Name</string>
+    <string name="by_viewed">Recently viewed</string>
+    <string name="by_name">Name (A-Z)</string>
     <string name="loading_message">Loading places</string>
     <string name="failed_connection_message">We have a network error</string>
     <string name="failed_connection_description">Network error</string>
@@ -30,4 +30,5 @@
     <string name="category_family_place">Kid-Friendly Places</string>
     <string name="category_park">Parks</string>
     <string name="category_shopping_center">Shopping Centers</string>
+    <string name="order_by">Order by</string>
 </resources>

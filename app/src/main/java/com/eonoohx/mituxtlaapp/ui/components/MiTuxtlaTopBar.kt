@@ -4,10 +4,14 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -78,42 +82,53 @@ fun MiTuxtlaTopAppBar(
             }
         },
         actions = {
-            if (screenTitle != R.string.about && screenTitle != R.string.feedback
-                && screenTitle != R.string.place
-            ) {
-                when (screenTitle) {
-                    R.string.app_name -> {
-                        IconButton(onClick = onFavoritesSelected) {
-                            Icon(
-                                imageVector = Icons.TwoTone.Favorite,
-                                contentDescription = stringResource(R.string.favorite_places_button),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    }
-
-                    R.string.favorites -> {
-                        IconButton(onClick = { expandedMenu = !expandedMenu }) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.ic_filter_list),
-                                contentDescription = stringResource(R.string.filter_places),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                        PlaceFilterMenu(
-                            expanded = expandedMenu,
-                            onDismissRequest = { expandedMenu = false },
-                            onOrderBy = {}
-                        )
-                    }
+            if (screenTitle != R.string.about && screenTitle != R.string.place) {
+                IconButton(onClick = onFavoritesSelected) {
+                    Icon(
+                        imageVector = Icons.TwoTone.Favorite,
+                        contentDescription = stringResource(R.string.favorite_places_button),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
             }
         },
-        colors = if (screenTitle == R.string.about || screenTitle == R.string.feedback)
+        colors = if (screenTitle == R.string.about)
             TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.background)
         else TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary),
         modifier = modifier
     )
+}
+
+@Composable
+fun MiTuxtlaAppMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    onAboutOptionSelected: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest, modifier = modifier) {
+        DropdownMenuItem(
+            text = { Text(text = stringResource(R.string.appearance_button)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_routine),
+                    contentDescription = stringResource(R.string.appearance_description)
+                )
+            },
+            onClick = {},
+        )
+        HorizontalDivider()
+        DropdownMenuItem(
+            text = { Text(text = stringResource(R.string.about)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = stringResource(R.string.about)
+                )
+            },
+            onClick = onAboutOptionSelected,
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -17,7 +17,7 @@ interface PlaceDao {
     suspend fun delete(favoritePlace: FavoritePlace)
 
     @Transaction
-    @Query("SELECT id, name, photo_url, category, viewed FROM place ORDER BY category ASC") // ASC ordering in ascending order
+    @Query("SELECT id, name, photo_url, category, viewed FROM place") // ASC ordering in ascending order
     fun getPlaces(): Flow<List<FavoritePlace>>
 
     @Transaction

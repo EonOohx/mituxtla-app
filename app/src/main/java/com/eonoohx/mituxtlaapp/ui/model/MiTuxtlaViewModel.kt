@@ -13,15 +13,14 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.eonoohx.mituxtlaapp.MiTuxtlaApplication
 import com.eonoohx.mituxtlaapp.data.DatabaseRepository
 import com.eonoohx.mituxtlaapp.data.PlacesRepository
+import com.eonoohx.mituxtlaapp.data.database.FavoritePlace
 import com.eonoohx.mituxtlaapp.data.network.Place
 import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
+import com.eonoohx.mituxtlaapp.ui.components.PlaceProperty
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -48,55 +47,9 @@ class MiTuxtlaViewModel(
     )
         private set
 
-
-    private val _favoritePlaceDetailsUiState = MutableStateFlow(FavoritePlaceDetailsUiState())
-
-    val favoritePlaceDetailsUiState: StateFlow<FavoritePlaceDetailsUiState> =
-        _favoritePlaceDetailsUiState.asStateFlow()
-
+    private val _favoritePlaceUiState = MutableStateFlow(FavoritePlaceUiState())
     val favoritePlaceUiState: StateFlow<FavoritePlaceUiState> =
-        databaseRepository.getAllFavoritePlacesStream()
-            .map { placeList -> FavoritePlaceUiState(favoritePlacesList = placeList) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = FavoritePlaceUiState()
-            )
-
-    fun loadFavoritePlace(placeId: String) {
-        _miTuxtlaUiState.update { currentUiState ->
-            currentUiState.copy(
-                savingAsFavorite = true
-            )
-        }
-        viewModelScope.launch {
-            databaseRepository.updateFavoritePlaceStatus(placeId)
-            val place = databaseRepository.getFavoritePlace(placeId).first()
-            _favoritePlaceDetailsUiState.value =
-                FavoritePlaceDetailsUiState(favoritePlaceDetails = place)
-        }
-    }
-
-    fun savePlace(placeInfo: PlaceInfo, category: String) = viewModelScope.launch {
-        databaseRepository.insertFavoritePlace(
-            placeInfo.toFavPlace(category = category, viewed = getCurrentTimestamp())
-        )
-        _miTuxtlaUiState.update { currentUiState ->
-            currentUiState.copy(
-                savingAsFavorite = true
-            )
-        }
-    }
-
-    fun deleteFavoritePlace(placeId: String) = viewModelScope.launch {
-        val place = databaseRepository.getFavoritePlace(placeId).first()
-        databaseRepository.deleteFavoritePlace(place)
-        _miTuxtlaUiState.update { currentUiState ->
-            currentUiState.copy(
-                savingAsFavorite = false
-            )
-        }
-    }
+        _favoritePlaceUiState.asStateFlow()
 
     fun setCurrentCategory(category: Int) = _miTuxtlaUiState.update { currentUiState ->
         currentUiState.copy(
@@ -104,10 +57,86 @@ class MiTuxtlaViewModel(
         )
     }
 
-    fun viewFavoritePlace(viewing: Boolean) = _miTuxtlaUiState.update { currentUiState ->
+    fun viewFavoritePlaceScreen(viewing: Boolean) = _miTuxtlaUiState.update { currentUiState ->
         currentUiState.copy(
             forViewFavoritePlace = viewing
         )
+    }
+
+    fun onSortRequest(property: PlaceProperty) =
+        _favoritePlaceUiState.update { currentUiState ->
+            currentUiState.copy(
+                favoritePlacesList = typeSorting(
+                    property,
+                    currentUiState.favoritePlacesList
+                ),
+                orderedBy = property
+            )
+        }
+
+    private fun updateFavSaveState(state: Boolean) = _miTuxtlaUiState.update { currentUiState ->
+        currentUiState.copy(
+            savingAsFavorite = state
+        )
+    }
+
+    private fun typeSorting(
+        property: PlaceProperty,
+        list: List<FavoritePlace>
+    ): List<FavoritePlace> {
+        return when (property) {
+            PlaceProperty.NAME -> list.sortedBy { it.name }
+            PlaceProperty.VIEWED -> list.sortedByDescending { it.viewed }
+            PlaceProperty.CATEGORY -> list.sortedBy { it.category }
+        }
+    }
+
+    // DB OPERATIONS
+    fun loadFavoritePlaces() = viewModelScope.launch {
+        databaseRepository.getAllFavoritePlacesStream().collect { places ->
+            _favoritePlaceUiState.update { currentUiState ->
+                currentUiState.copy(
+                    favoritePlacesList = typeSorting(
+                        currentUiState.orderedBy,
+                        places
+                    ),
+                )
+            }
+        }
+    }
+
+    fun loadFavoritePlace(placeId: String) = viewModelScope.launch {
+        databaseRepository.updateFavoritePlaceStatus(placeId)
+
+        val place = databaseRepository.getFavoritePlace(placeId).first()
+
+        _favoritePlaceUiState.update { currentUiState ->
+            currentUiState.copy(
+                favoritePlaceDetails = place,
+            )
+        }
+
+        updateFavSaveState(true)
+    }
+
+    fun savePlace(placeInfo: PlaceInfo, category: String) {
+        viewModelScope.launch {
+            databaseRepository.insertFavoritePlace(
+                placeInfo.toFavPlace(category = category, viewed = getCurrentTimestamp())
+            )
+
+            updateFavSaveState(true)
+        }
+    }
+
+    fun deleteFavoritePlace(placeId: String) {
+        viewModelScope.launch {
+            val place = databaseRepository.getFavoritePlace(placeId).first()
+            databaseRepository.deleteFavoritePlace(place)
+
+            updateFavSaveState(false)
+        }
+
     }
 
     // API OPERATIONS
@@ -159,7 +188,6 @@ class MiTuxtlaViewModel(
     }
 
     companion object {
-        private const val TIMEOUT_MILLIS = 20_000L
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as MiTuxtlaApplication)

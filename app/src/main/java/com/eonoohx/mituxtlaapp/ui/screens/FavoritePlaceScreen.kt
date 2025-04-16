@@ -7,22 +7,28 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.eonoohx.mituxtlaapp.R
 import com.eonoohx.mituxtlaapp.data.database.FavoritePlace
 import com.eonoohx.mituxtlaapp.ui.components.PlacesContentScreen
+import com.eonoohx.mituxtlaapp.ui.model.FavoritePlaceUiState
 import com.eonoohx.mituxtlaapp.ui.theme.Shape
 
 @Composable
 fun FavoritePlaceScreen(
-    listFavoritePlaces: List<FavoritePlace>,
+    favoritePlaceUiState: State<FavoritePlaceUiState>,
     modifier: Modifier = Modifier,
     onSelectedFavoritePlace: (id: String) -> Unit,
 ) {
     LazyVerticalGrid(modifier = modifier, columns = GridCells.Fixed(2)) {
-        items(items = listFavoritePlaces, key = { place -> place.id }) { place ->
+        items(
+            items = favoritePlaceUiState.value.favoritePlacesList,
+            key = { place -> place.id }) { place ->
             Card(
                 shape = Shape.small,
                 onClick = { onSelectedFavoritePlace(place.id) },
@@ -58,7 +64,8 @@ fun FavoritePlaceScreenPreview() {
         ),
     )
     FavoritePlaceScreen(
-        listFavoritePlaces = mockFavoritePlaces,
+        favoritePlaceUiState = remember {
+            mutableStateOf(FavoritePlaceUiState(favoritePlacesList = mockFavoritePlaces)) },
         onSelectedFavoritePlace = {},
         modifier = Modifier.safeDrawingPadding()
     )

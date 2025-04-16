@@ -5,6 +5,7 @@ import com.eonoohx.mituxtlaapp.data.local.CategoryType
 import com.eonoohx.mituxtlaapp.data.local.PlaceCategories
 import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
 import com.eonoohx.mituxtlaapp.data.network.PlaceLocation
+import com.eonoohx.mituxtlaapp.ui.components.PlaceProperty
 
 data class MiTuxtlaUiState(
     val currentCategory: Int? = null,
@@ -13,12 +14,11 @@ data class MiTuxtlaUiState(
     val savingAsFavorite: Boolean = false,
 )
 
-data class FavoritePlaceUiState(val favoritePlacesList: List<FavoritePlace> = emptyList())
-
-data class FavoritePlaceDetailsUiState(
+data class FavoritePlaceUiState(
     val favoritePlaceDetails: FavoritePlace? = null,
+    val favoritePlacesList: List<FavoritePlace> = emptyList(),
+    val orderedBy: PlaceProperty = PlaceProperty.CATEGORY
 )
-
 
 sealed interface PlaceServiceUiState<out T> {
     data class Success<T>(val data: T) : PlaceServiceUiState<T>
