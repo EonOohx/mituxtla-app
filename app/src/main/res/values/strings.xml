@@ -3,9 +3,9 @@
     <string name="developer">Raúl Alejandro Rodríguez Rodríguez</string>
     <string name="github">https://github.com/EonOohx</string>
     <string name="email">RaulAlejandro_RodriguezR@hotmail.com</string>
-    <string name="menu_button">Menu button</string>
+    <string name="menu_button">Menu</string>
     <string name="favorites">Favorites</string>
-    <string name="favorite_places_button">See favorite places</string>
+    <string name="favorite_places_button">Favorite places</string>
     <string name="category">Category</string>
     <string name="place">Place</string>
     <string name="about">About</string>
@@ -14,14 +14,14 @@
     <string name="filter_places">Filter places</string>
     <string name="language_button">Language</string>
     <string name="appearance_button">Appearance</string>
-    <string name="appearance_description">Switch Appearance</string>
-    <string name="feedback_button">Send Feedback</string>
+    <string name="appearance_description">Change appearance</string>
+    <string name="feedback_button">Send feedback</string>
     <string name="feedback_description">Send feedback</string>
-    <string name="by_category">Category</string>
+    <string name="by_category">By category</string>
     <string name="by_viewed">Recently viewed</string>
-    <string name="by_name">Name (A-Z)</string>
+    <string name="by_name">Name (A–Z)</string>
     <string name="loading_message">Loading places</string>
-    <string name="failed_connection_message">We have a network error</string>
+    <string name="failed_connection_message">Network error occurred</string>
     <string name="failed_connection_description">Network error</string>
 
     <!-- Place Categories -->
@@ -31,4 +31,6 @@
     <string name="category_park">Parks</string>
     <string name="category_shopping_center">Shopping Centers</string>
     <string name="order_by">Order by</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

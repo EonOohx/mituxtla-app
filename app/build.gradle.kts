@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.fir.declarations.builder.buildScript
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -81,6 +79,11 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation(libs.androidx.room.ktx)
+
+    //Preference Settings
+//    implementation(libs.androidx.preference.ktx)
+    implementation("androidx.datastore:datastore-preferences:1.1.4")
+
 
     // Testing
     androidTestImplementation(libs.androidx.espresso.core)

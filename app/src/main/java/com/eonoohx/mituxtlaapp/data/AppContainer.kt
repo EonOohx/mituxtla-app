@@ -1,9 +1,13 @@
 package com.eonoohx.mituxtlaapp.data
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.eonoohx.mituxtlaapp.BuildConfig
 import com.eonoohx.mituxtlaapp.data.database.FavoritePlacesDatabase
 import com.eonoohx.mituxtlaapp.data.network.PlaceApiService
+import com.eonoohx.mituxtlaapp.data.preference.UserPreferencesRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -14,7 +18,9 @@ interface AppContainer {
     val databaseRepository: DatabaseRepository
 }
 
-class PlacesApplication(private val context: Context) : AppContainer {
+class PlacesApplication(
+    private val context: Context,
+) : AppContainer {
     private val baseUri: String = BuildConfig.BASE_URI
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))

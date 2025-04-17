@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.preferences.core.preferencesOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -16,11 +17,15 @@ import com.eonoohx.mituxtlaapp.data.PlacesRepository
 import com.eonoohx.mituxtlaapp.data.database.FavoritePlace
 import com.eonoohx.mituxtlaapp.data.network.Place
 import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
+import com.eonoohx.mituxtlaapp.data.preference.AppTheme
+import com.eonoohx.mituxtlaapp.data.preference.UserPreferencesRepository
 import com.eonoohx.mituxtlaapp.ui.components.PlaceProperty
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -31,7 +36,8 @@ import java.util.Locale
 
 class MiTuxtlaViewModel(
     private val placesRepository: PlacesRepository,
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private var _miTuxtlaUiState = MutableStateFlow(MiTuxtlaUiState())
@@ -80,17 +86,6 @@ class MiTuxtlaViewModel(
         )
     }
 
-    private fun typeSorting(
-        property: PlaceProperty,
-        list: List<FavoritePlace>
-    ): List<FavoritePlace> {
-        return when (property) {
-            PlaceProperty.NAME -> list.sortedBy { it.name }
-            PlaceProperty.VIEWED -> list.sortedByDescending { it.viewed }
-            PlaceProperty.CATEGORY -> list.sortedBy { it.category }
-        }
-    }
-
     // DB OPERATIONS
     fun loadFavoritePlaces() = viewModelScope.launch {
         databaseRepository.getAllFavoritePlacesStream().collect { places ->
@@ -110,13 +105,13 @@ class MiTuxtlaViewModel(
 
         val place = databaseRepository.getFavoritePlace(placeId).first()
 
+        updateFavSaveState(true)
+
         _favoritePlaceUiState.update { currentUiState ->
             currentUiState.copy(
                 favoritePlaceDetails = place,
             )
         }
-
-        updateFavSaveState(true)
     }
 
     fun savePlace(placeInfo: PlaceInfo, category: String) {
@@ -173,12 +168,35 @@ class MiTuxtlaViewModel(
         }
     }
 
+    // Preferences
+    val theme: StateFlow<AppTheme> =
+        userPreferencesRepository.selectedTheme.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = AppTheme.LIGHT
+        )
+
+    fun selectTheme(theme: AppTheme) = viewModelScope.launch {
+        userPreferencesRepository.saveThemePreference(theme)
+    }
+
     // Utils
     private fun verifySavedPlace(exists: Boolean) {
         _miTuxtlaUiState.update { currentUiState ->
             currentUiState.copy(
                 savingAsFavorite = exists
             )
+        }
+    }
+
+    private fun typeSorting(
+        property: PlaceProperty,
+        list: List<FavoritePlace>
+    ): List<FavoritePlace> {
+        return when (property) {
+            PlaceProperty.NAME -> list.sortedBy { it.name }
+            PlaceProperty.VIEWED -> list.sortedByDescending { it.viewed }
+            PlaceProperty.CATEGORY -> list.sortedBy { it.category }
         }
     }
 
@@ -193,9 +211,11 @@ class MiTuxtlaViewModel(
                 val application = (this[APPLICATION_KEY] as MiTuxtlaApplication)
                 val placesRepository = application.container.placesRepository
                 val databaseRepository = application.container.databaseRepository
+                val userPreferencesRepository = application.userPreferencesRepository
                 MiTuxtlaViewModel(
                     placesRepository = placesRepository,
-                    databaseRepository = databaseRepository
+                    databaseRepository = databaseRepository,
+                    userPreferencesRepository = userPreferencesRepository
                 )
             }
         }

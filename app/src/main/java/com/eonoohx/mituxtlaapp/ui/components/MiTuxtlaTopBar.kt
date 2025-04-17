@@ -1,6 +1,7 @@
 package com.eonoohx.mituxtlaapp.ui.components
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.border
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -26,11 +27,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.eonoohx.mituxtlaapp.R
+import com.eonoohx.mituxtlaapp.data.preference.AppTheme
+import com.eonoohx.mituxtlaapp.ui.screens.ThemePreferenceScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,9 +44,20 @@ fun MiTuxtlaTopAppBar(
     navigateUp: () -> Unit,
     onAboutSelected: () -> Unit,
     onFavoritesSelected: () -> Unit,
+    onSelectedTheme: (AppTheme) -> Unit,
+    isDarkTheme: Boolean,
     modifier: Modifier = Modifier
 ) {
     var expandedMenu by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        ThemePreferenceScreen(
+            onSelectedTheme = onSelectedTheme,
+            isDarkTheme = isDarkTheme,
+            onDismissRequest = { showDialog = false })
+    }
+
     TopAppBar(
         title = {
             Text(
@@ -77,7 +92,8 @@ fun MiTuxtlaTopAppBar(
                 MiTuxtlaAppMenu(
                     expanded = expandedMenu,
                     onDismissRequest = { expandedMenu = false },
-                    onAboutOptionSelected = onAboutSelected
+                    onAboutOptionSelected = onAboutSelected,
+                    onChangeTheme = { showDialog = true }
                 )
             }
         },
@@ -104,6 +120,7 @@ fun MiTuxtlaAppMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     onAboutOptionSelected: () -> Unit,
+    onChangeTheme: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest, modifier = modifier) {
@@ -115,9 +132,14 @@ fun MiTuxtlaAppMenu(
                     contentDescription = stringResource(R.string.appearance_description)
                 )
             },
-            onClick = {},
+            onClick = onChangeTheme,
         )
-        HorizontalDivider()
+        HorizontalDivider(
+            modifier = Modifier.border(
+                width = dimensionResource(R.dimen.padding_medium),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
         DropdownMenuItem(
             text = { Text(text = stringResource(R.string.about)) },
             leadingIcon = {
