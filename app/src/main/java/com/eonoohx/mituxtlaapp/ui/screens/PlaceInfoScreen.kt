@@ -82,7 +82,9 @@ fun PlaceInfoScreen(
             )
         }
 
-        is PlaceServiceUiState.Error -> ErrorScreen()
+        is PlaceServiceUiState.Error -> {
+            ErrorScreen(error = placeServiceUiState.error)
+        }
     }
 }
 

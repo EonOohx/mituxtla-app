@@ -11,6 +11,7 @@ import coil3.SingletonImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import com.eonoohx.mituxtlaapp.data.AppContainer
 import com.eonoohx.mituxtlaapp.data.PlacesApplication
+import com.eonoohx.mituxtlaapp.data.preference.PreferenceRepository
 import com.eonoohx.mituxtlaapp.data.preference.UserPreferencesRepository
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -21,7 +22,7 @@ private val Context.dataStore: DataStore<Preferences>
 
 class MiTuxtlaApplication : Application(), SingletonImageLoader.Factory {
     lateinit var container: AppContainer
-    lateinit var userPreferencesRepository: UserPreferencesRepository
+    lateinit var userPreferencesRepository: PreferenceRepository
 
     override fun onCreate() {
         super.onCreate()

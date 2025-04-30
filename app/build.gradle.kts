@@ -81,7 +81,6 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     //Preference Settings
-//    implementation(libs.androidx.preference.ktx)
     implementation("androidx.datastore:datastore-preferences:1.1.4")
 
 

@@ -11,14 +11,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
+interface PreferenceRepository {
+    val selectedTheme: Flow<AppTheme>
+    suspend fun saveThemePreference(theme: AppTheme)
+}
+
 enum class AppTheme {
     LIGHT, DARK
 }
 
 class UserPreferencesRepository(
     private val dataStore: DataStore<Preferences>
-) {
-    val selectedTheme: Flow<AppTheme> =
+) : PreferenceRepository {
+    override val selectedTheme: Flow<AppTheme> =
         dataStore.data.catch {
             if (it is IOException) {
                 Log.e(TAG, "Error reading preferences.", it)
@@ -26,7 +31,7 @@ class UserPreferencesRepository(
             } else throw it
         }.map { preferences -> if (preferences[THEME] == "DARK") AppTheme.DARK else AppTheme.LIGHT }
 
-    suspend fun saveThemePreference(theme: AppTheme) {
+    override suspend fun saveThemePreference(theme: AppTheme) {
         dataStore.edit { preferences ->
             preferences[THEME] = theme.name
         }

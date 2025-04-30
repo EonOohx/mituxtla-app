@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,7 +25,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -51,7 +54,7 @@ fun ContentText(text: String, modifier: Modifier = Modifier, isOnMenu: Boolean =
 }
 
 @Composable
-fun StateScreen(
+fun ApiStateScreen(
     @DrawableRes stateImage: Int,
     @StringRes message: Int,
     @StringRes contentDescription: Int,
@@ -60,7 +63,9 @@ fun StateScreen(
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .safeContentPadding()
     ) {
         Image(
             painter = painterResource(stateImage),
@@ -69,7 +74,7 @@ fun StateScreen(
                 dimensionResource(R.dimen.size_large)
             )
         )
-        Text(text = stringResource(message))
+        Text(text = stringResource(message), textAlign = TextAlign.Center)
     }
 }
 
@@ -94,4 +99,14 @@ fun PlacesContentScreen(text: String, imageSrc: String, modifier: Modifier = Mod
             isOnMenu = false
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ApiStateScreenPreview() {
+    ApiStateScreen(
+        stateImage = R.drawable.ic_broken_image,
+        contentDescription = R.string.network_error,
+        message = R.string.network_error
+    )
 }

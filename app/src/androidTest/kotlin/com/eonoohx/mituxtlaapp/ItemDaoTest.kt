@@ -58,8 +58,8 @@ class ItemDaoTest {
         val place1 = placeDao.getPlace(allItems[0].id).first()
         val place2 = placeDao.getPlace(allItems[1].id).first()
 
-        assertEquals(place2, FakeDataSource.fakeFavoritePlaces[1])
-        assertEquals(place1, FakeDataSource.fakeFavoritePlaces[2])
+        assertEquals(place1, FakeDataSource.fakeFavoritePlaces[1])
+        assertEquals(place2, FakeDataSource.fakeFavoritePlaces[2])
     }
 
     @Test

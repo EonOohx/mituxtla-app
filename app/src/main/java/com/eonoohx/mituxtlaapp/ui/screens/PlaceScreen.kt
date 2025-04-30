@@ -35,7 +35,9 @@ fun PlacesScreen(
             contentPadding = PaddingValues(dimensionResource(R.dimen.padding_small))
         ) { placeId -> onSelectOptionClicked(placeId) }
 
-        is PlaceServiceUiState.Error -> ErrorScreen()
+        is PlaceServiceUiState.Error -> {
+            ErrorScreen(error = placeServiceUiState.error)
+        }
     }
 }
 

@@ -24,17 +24,32 @@ object FakeDataSource {
     val fakePlaceInfo: PlaceInfo = PlaceInfo(
         id = "place_004",
         name = "Golden Gate Bridge",
-        rating = 4.6f,
+        rating = 0.0f,
         photoUrl = "https://example.com/photos/golden_gate.jpg",
         address = "Golden Gate Bridge, San Francisco, CA, USA",
         location = PlaceLocation(
             lat = 37.819929,
             lng = -122.478255
         ),
-        isOpen = null, // ejemplo con valor nulo
+        isOpen = null,
         website = null,
         phone = null,
         description = "A suspension bridge spanning the Golden Gate strait, the one-mile-wide channel between San Francisco Bay and the Pacific Ocean."
+    )
+
+    val favoriteFromInfo: FavoritePlace = FavoritePlace(
+        id = fakePlaceInfo.id,
+        name = fakePlaceInfo.name,
+        rating = fakePlaceInfo.rating,
+        photoUrl = fakePlaceInfo.photoUrl,
+        address = fakePlaceInfo.address,
+        description = fakePlaceInfo.description,
+        phone = fakePlaceInfo.phone,
+        website = fakePlaceInfo.website,
+        latLocation = fakePlaceInfo.location?.lat.toString(),
+        lngLocation = fakePlaceInfo.location?.lng.toString(),
+        category = "Kid-Friendly Places",
+        viewed = ""
     )
 
     val fakeFavoritePlaces = mutableListOf(

@@ -6,6 +6,7 @@ import com.eonoohx.mituxtlaapp.data.local.PlaceCategories
 import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
 import com.eonoohx.mituxtlaapp.data.network.PlaceLocation
 import com.eonoohx.mituxtlaapp.ui.components.PlaceProperty
+import com.eonoohx.mituxtlaapp.ui.utils.PlaceApiErrorType
 
 data class MiTuxtlaUiState(
     val currentCategory: Int? = null,
@@ -22,7 +23,7 @@ data class FavoritePlaceUiState(
 
 sealed interface PlaceServiceUiState<out T> {
     data class Success<T>(val data: T) : PlaceServiceUiState<T>
-    data object Error : PlaceServiceUiState<Nothing>
+    data class Error(val error: PlaceApiErrorType) : PlaceServiceUiState<Nothing>
     data object Loading : PlaceServiceUiState<Nothing>
 }
 

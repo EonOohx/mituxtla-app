@@ -1,10 +1,8 @@
 package com.eonoohx.mituxtlaapp.ui.model
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.core.preferencesOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -18,8 +16,10 @@ import com.eonoohx.mituxtlaapp.data.database.FavoritePlace
 import com.eonoohx.mituxtlaapp.data.network.Place
 import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
 import com.eonoohx.mituxtlaapp.data.preference.AppTheme
-import com.eonoohx.mituxtlaapp.data.preference.UserPreferencesRepository
+import com.eonoohx.mituxtlaapp.data.preference.PreferenceRepository
 import com.eonoohx.mituxtlaapp.ui.components.PlaceProperty
+import com.eonoohx.mituxtlaapp.ui.utils.PlaceApiErrorType
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -37,7 +38,7 @@ import java.util.Locale
 class MiTuxtlaViewModel(
     private val placesRepository: PlacesRepository,
     private val databaseRepository: DatabaseRepository,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: PreferenceRepository
 ) : ViewModel() {
 
     private var _miTuxtlaUiState = MutableStateFlow(MiTuxtlaUiState())
@@ -137,34 +138,29 @@ class MiTuxtlaViewModel(
     // API OPERATIONS
     fun getApiPlacesList(requestQuery: String) = viewModelScope.launch {
         listPlacesUiState = PlaceServiceUiState.Loading
-        listPlacesUiState = try {
-            PlaceServiceUiState.Success(
-                data = placesRepository.getPlacesData(
-                    search = requestQuery
-                )
-            )
-        } catch (e: IOException) {
-            Log.e("Network Error", e.toString())
-            PlaceServiceUiState.Error
-        } catch (e: HttpException) {
-            Log.e("Network Error", e.toString())
-            PlaceServiceUiState.Error
-        }
+        listPlacesUiState = apiCallHelper { placesRepository.getPlacesData(requestQuery) }
     }
 
     fun getApiPlaceInfo(placeId: String) = viewModelScope.launch {
         verifySavedPlace(databaseRepository.exists(placeId))
         placeInfoUiState = PlaceServiceUiState.Loading
-        placeInfoUiState = try {
-            PlaceServiceUiState.Success(
-                data = placesRepository.getPlaceInfoData(placeId = placeId)
-            )
+        placeInfoUiState = apiCallHelper { placesRepository.getPlaceInfoData(placeId) }
+    }
+
+    private suspend fun <T> apiCallHelper(
+        timeout: Long = 10000,
+        call: suspend () -> T
+    ): PlaceServiceUiState<T> {
+        return try {
+            withTimeout(timeout) {
+                PlaceServiceUiState.Success(call())
+            }
         } catch (e: IOException) {
-            Log.e("Network Error", e.toString())
-            PlaceServiceUiState.Error
-        } catch (e: IOException) {
-            Log.e("Network Error", e.toString())
-            PlaceServiceUiState.Error
+            PlaceServiceUiState.Error(PlaceApiErrorType.NETWORK)
+        } catch (e: HttpException) {
+            PlaceServiceUiState.Error(PlaceApiErrorType.HTTP)
+        } catch (e: TimeoutCancellationException) {
+            PlaceServiceUiState.Error(PlaceApiErrorType.TIMEOUT)
         }
     }
 
