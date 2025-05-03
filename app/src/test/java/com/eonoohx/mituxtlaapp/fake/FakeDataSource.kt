@@ -18,7 +18,7 @@ object FakeDataSource {
             name = "Colosseum",
             rating = 4.7f,
             photoUrl = "https://example.com/photos/colosseum.jpg"
-        ),
+        )
     )
 
     val fakePlaceInfo: PlaceInfo = PlaceInfo(

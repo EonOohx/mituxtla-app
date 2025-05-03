@@ -123,9 +123,8 @@ fun MiTuxtlaAppScreen() {
                     }
 
                     composable(route = MiTuxtlaApp.FAVORITES.name) {
-                        val favoritePlaceUiState =
-                            miTuxtlaViewModel.favoritePlaceUiState.collectAsState()
-                        FavoritePlaceScreen(favoritePlaceUiState = favoritePlaceUiState) { placeId ->
+                        val favoritePlaceUiState = miTuxtlaViewModel.favoritePlaceUiState.collectAsState()
+                        FavoritePlaceScreen(favoritePlaces = favoritePlaceUiState.value.favoritePlacesList) { placeId ->
                             miTuxtlaViewModel.loadFavoritePlace(placeId)
                             miTuxtlaViewModel.viewFavoritePlaceScreen(viewing = true)
                             navController.navigate(route = MiTuxtlaApp.PLACE.name)

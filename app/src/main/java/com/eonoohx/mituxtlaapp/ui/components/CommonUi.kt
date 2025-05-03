@@ -54,7 +54,7 @@ fun ContentText(text: String, modifier: Modifier = Modifier, isOnMenu: Boolean =
 }
 
 @Composable
-fun ApiStateScreen(
+fun RepositoryStateScreen(
     @DrawableRes stateImage: Int,
     @StringRes message: Int,
     @StringRes contentDescription: Int,
@@ -104,7 +104,7 @@ fun PlacesContentScreen(text: String, imageSrc: String, modifier: Modifier = Mod
 @Preview(showBackground = true)
 @Composable
 fun ApiStateScreenPreview() {
-    ApiStateScreen(
+    RepositoryStateScreen(
         stateImage = R.drawable.ic_broken_image,
         contentDescription = R.string.network_error,
         message = R.string.network_error

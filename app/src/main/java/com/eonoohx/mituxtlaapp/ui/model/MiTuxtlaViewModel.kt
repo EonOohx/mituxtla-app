@@ -1,5 +1,6 @@
 package com.eonoohx.mituxtlaapp.ui.model
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,8 +19,6 @@ import com.eonoohx.mituxtlaapp.data.network.PlaceInfo
 import com.eonoohx.mituxtlaapp.data.preference.AppTheme
 import com.eonoohx.mituxtlaapp.data.preference.PreferenceRepository
 import com.eonoohx.mituxtlaapp.ui.components.PlaceProperty
-import com.eonoohx.mituxtlaapp.ui.utils.PlaceApiErrorType
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,9 +27,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
-import retrofit2.HttpException
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -70,17 +66,6 @@ class MiTuxtlaViewModel(
         )
     }
 
-    fun onSortRequest(property: PlaceProperty) =
-        _favoritePlaceUiState.update { currentUiState ->
-            currentUiState.copy(
-                favoritePlacesList = typeSorting(
-                    property,
-                    currentUiState.favoritePlacesList
-                ),
-                orderedBy = property
-            )
-        }
-
     private fun updateFavSaveState(state: Boolean) = _miTuxtlaUiState.update { currentUiState ->
         currentUiState.copy(
             savingAsFavorite = state
@@ -89,50 +74,94 @@ class MiTuxtlaViewModel(
 
     // DB OPERATIONS
     fun loadFavoritePlaces() = viewModelScope.launch {
-        databaseRepository.getAllFavoritePlacesStream().collect { places ->
-            _favoritePlaceUiState.update { currentUiState ->
-                currentUiState.copy(
-                    favoritePlacesList = typeSorting(
-                        currentUiState.orderedBy,
-                        places
-                    ),
-                )
+        dbCallHelper(
+            call = {
+                databaseRepository.getAllFavoritePlacesStream().collect { places ->
+                    _favoritePlaceUiState.update { currentUiState ->
+                        currentUiState.copy(
+                            favoritePlacesList = typeSorting(
+                                currentUiState.orderedBy,
+                                places
+                            ),
+                        )
+                    }
+                }
+            },
+            onError = { errorState ->
+                _favoritePlaceUiState.update { currentUiState ->
+                    currentUiState.copy(
+                        favoritePlacesList = errorState
+                    )
+                }
             }
-        }
+        )
     }
 
     fun loadFavoritePlace(placeId: String) = viewModelScope.launch {
-        databaseRepository.updateFavoritePlaceStatus(placeId)
+        dbCallHelper(
+            call = {
+                updateFavSaveState(true)
+                databaseRepository.updateFavoritePlaceStatus(placeId)
+                val place = databaseRepository.getFavoritePlace(placeId).first()
+                _favoritePlaceUiState.update {
+                    it.copy(favoritePlaceDetails = PlaceServiceUiState.Success(place))
+                }
+            },
+            onError = { errorState ->
+                _favoritePlaceUiState.update { currentUiState ->
+                    currentUiState.copy(favoritePlaceDetails = errorState)
+                }
+            }
+        )
+    }
 
-        val place = databaseRepository.getFavoritePlace(placeId).first()
+    fun savePlace(placeInfo: PlaceInfo, category: String) =
+        viewModelScope.launch {
+            dbCallHelper(
+                call = {
+                    databaseRepository.insertFavoritePlace(
+                        placeInfo.toFavPlace(category = category, viewed = getCurrentTimestamp())
+                    )
 
-        updateFavSaveState(true)
+                    updateFavSaveState(true)
+                },
+            )
+        }
 
+    fun deleteFavoritePlace(placeId: String) = viewModelScope.launch {
+        dbCallHelper(
+            call = {
+                val place = databaseRepository.getFavoritePlace(placeId).first()
+                databaseRepository.deleteFavoritePlace(place)
+
+                updateFavSaveState(false)
+            },
+        )
+    }
+
+    private fun typeSorting(
+        property: PlaceProperty,
+        list: List<FavoritePlace>
+    ): PlaceServiceUiState.Success<List<FavoritePlace>> {
+        return PlaceServiceUiState.Success(
+            when (property) {
+                PlaceProperty.NAME -> list.sortedBy { it.name }
+                PlaceProperty.VIEWED -> list.sortedByDescending { it.viewed }
+                PlaceProperty.CATEGORY -> list.sortedBy { it.category }
+            })
+    }
+
+    fun onSortRequest(property: PlaceProperty) {
         _favoritePlaceUiState.update { currentUiState ->
             currentUiState.copy(
-                favoritePlaceDetails = place,
+                favoritePlacesList =
+                    typeSorting(
+                        property,
+                        (currentUiState.favoritePlacesList as PlaceServiceUiState.Success).data
+                    ),
+                orderedBy = property
             )
         }
-    }
-
-    fun savePlace(placeInfo: PlaceInfo, category: String) {
-        viewModelScope.launch {
-            databaseRepository.insertFavoritePlace(
-                placeInfo.toFavPlace(category = category, viewed = getCurrentTimestamp())
-            )
-
-            updateFavSaveState(true)
-        }
-    }
-
-    fun deleteFavoritePlace(placeId: String) {
-        viewModelScope.launch {
-            val place = databaseRepository.getFavoritePlace(placeId).first()
-            databaseRepository.deleteFavoritePlace(place)
-
-            updateFavSaveState(false)
-        }
-
     }
 
     // API OPERATIONS
@@ -141,30 +170,25 @@ class MiTuxtlaViewModel(
         listPlacesUiState = apiCallHelper { placesRepository.getPlacesData(requestQuery) }
     }
 
-    fun getApiPlaceInfo(placeId: String) = viewModelScope.launch {
-        verifySavedPlace(databaseRepository.exists(placeId))
-        placeInfoUiState = PlaceServiceUiState.Loading
-        placeInfoUiState = apiCallHelper { placesRepository.getPlaceInfoData(placeId) }
-    }
-
-    private suspend fun <T> apiCallHelper(
-        timeout: Long = 10000,
-        call: suspend () -> T
-    ): PlaceServiceUiState<T> {
-        return try {
-            withTimeout(timeout) {
-                PlaceServiceUiState.Success(call())
+    fun getApiPlaceInfo(placeId: String) {
+        viewModelScope.launch {
+            dbCallHelper(call = { verifySavedPlace(databaseRepository.exists(placeId)) })
+            placeInfoUiState = PlaceServiceUiState.Loading
+            placeInfoUiState = apiCallHelper {
+                placesRepository.getPlaceInfoData(placeId)
             }
-        } catch (e: IOException) {
-            PlaceServiceUiState.Error(PlaceApiErrorType.NETWORK)
-        } catch (e: HttpException) {
-            PlaceServiceUiState.Error(PlaceApiErrorType.HTTP)
-        } catch (e: TimeoutCancellationException) {
-            PlaceServiceUiState.Error(PlaceApiErrorType.TIMEOUT)
         }
     }
 
-    // Preferences
+    private fun verifySavedPlace(exists: Boolean) {
+        _miTuxtlaUiState.update { currentUiState ->
+            currentUiState.copy(
+                savingAsFavorite = exists
+            )
+        }
+    }
+
+    // PREFERENCES
     val theme: StateFlow<AppTheme> =
         userPreferencesRepository.selectedTheme.stateIn(
             scope = viewModelScope,
@@ -176,26 +200,7 @@ class MiTuxtlaViewModel(
         userPreferencesRepository.saveThemePreference(theme)
     }
 
-    // Utils
-    private fun verifySavedPlace(exists: Boolean) {
-        _miTuxtlaUiState.update { currentUiState ->
-            currentUiState.copy(
-                savingAsFavorite = exists
-            )
-        }
-    }
-
-    private fun typeSorting(
-        property: PlaceProperty,
-        list: List<FavoritePlace>
-    ): List<FavoritePlace> {
-        return when (property) {
-            PlaceProperty.NAME -> list.sortedBy { it.name }
-            PlaceProperty.VIEWED -> list.sortedByDescending { it.viewed }
-            PlaceProperty.CATEGORY -> list.sortedBy { it.category }
-        }
-    }
-
+    // UTILS
     private fun getCurrentTimestamp(): String {
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         return formatter.format(Date())

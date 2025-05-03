@@ -33,7 +33,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
     ) {
         Image(
-            painter = painterResource(R.drawable.img_loading),
+            painter = painterResource(R.drawable.mituxtlaapp),
             contentDescription = "",
             modifier = Modifier
                 .size(dimensionResource(R.dimen.size_medium))

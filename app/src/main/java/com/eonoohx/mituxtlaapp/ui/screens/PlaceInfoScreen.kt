@@ -60,7 +60,7 @@ fun PlaceInfoScreen(
     onSavedAsFavorite: (place: PlaceInfo, category: String) -> Unit,
 ) {
     val category = stringResource(currentCategory)
-    var markedAsFavorite by remember { mutableStateOf(miTuxtlaUiState.forViewFavoritePlace) }
+    var markedAsFavorite by remember { mutableStateOf(miTuxtlaUiState.savingAsFavorite) }
 
     when (placeServiceUiState) {
         is PlaceServiceUiState.Loading -> LoadingScreen()
@@ -71,7 +71,7 @@ fun PlaceInfoScreen(
                 data = place,
                 onSavedFavorite = {
                     markedAsFavorite = !markedAsFavorite
-                    if (miTuxtlaUiState.forViewFavoritePlace) {
+                    if (miTuxtlaUiState.savingAsFavorite) {
                         if (!markedAsFavorite) onDeleteAsFavorite(place.id)
                     } else {
                         if (markedAsFavorite) onSavedAsFavorite(place, category)
@@ -112,6 +112,7 @@ fun PlaceInfoCard(
                 .height(dimensionResource(R.dimen.size_large))
                 .background(color = Color.White)
         )
+
         Column(
             modifier = Modifier
                 .fillMaxHeight()
@@ -125,17 +126,20 @@ fun PlaceInfoCard(
                     text = data.name,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = modifier.weight(1f)
+                    modifier = Modifier.weight(1f)
                 )
                 Row {
                     IconButton(onClick = onSavedFavorite) {
                         Icon(
-                            imageVector = if (isSavedAsFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            imageVector = if (isSavedAsFavorite) Icons.Filled.Favorite
+                            else Icons.Outlined.FavoriteBorder,
+
                             contentDescription = "Add as Favorite"
                         )
                     }
                 }
             }
+
             // BODY
             Row(
                 modifier = Modifier.wrapContentHeight(),
@@ -171,10 +175,12 @@ fun PlaceInfoCard(
                 )
             }
             if (data.website != null) {
-                Text(
-                    text = "Website: ${data.website}",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                if (data.website.isNotEmpty()) {
+                    Text(
+                        text = "Website: ${data.website}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }

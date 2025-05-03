@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -62,7 +63,8 @@ fun ThemePreferenceScreen(
                     onClick = {
                         selectedDarkTheme = false
                         onSelectedTheme(AppTheme.LIGHT)
-                    }
+                    },
+                    modifier = Modifier.weight(1f)
                 )
 
                 ThemeOption(
@@ -71,7 +73,8 @@ fun ThemePreferenceScreen(
                     onClick = {
                         selectedDarkTheme = true
                         onSelectedTheme(AppTheme.DARK)
-                    }
+                    },
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -86,8 +89,18 @@ fun ThemeOption(
     modifier: Modifier = Modifier
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.fillMaxWidth()) {
-        RadioButton(selected = selectedDarkTheme, onClick = onClick)
-        Text(text = text)
+        OutlinedButton(
+            onClick = onClick, modifier = Modifier
+                .fillMaxWidth(),
+            enabled = !selectedDarkTheme,
+            colors = ButtonDefaults.buttonColors().copy(
+                disabledContainerColor = MaterialTheme.colorScheme.primary,
+                disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        ) {
+            Text(text = text)
+        }
     }
 }
 

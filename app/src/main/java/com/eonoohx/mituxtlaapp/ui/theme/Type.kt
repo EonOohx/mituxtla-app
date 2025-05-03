@@ -21,6 +21,10 @@ val Typography = Typography(
         fontFamily = daysOneRegular,
         fontWeight = FontWeight.Bold
     ),
+    headlineSmall = Typography().headlineSmall.copy(
+        fontFamily = daysOneRegular,
+        fontWeight = FontWeight.Bold
+    ),
     bodyLarge = Typography().bodyLarge.copy(
         fontFamily = andikaBold,
         fontSize = 20.sp

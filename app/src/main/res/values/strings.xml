@@ -13,8 +13,8 @@
     <string name="back_button">Back</string>
     <string name="filter_places">Filter places</string>
     <string name="language_button">Language</string>
-    <string name="appearance_button">Appearance</string>
-    <string name="appearance_description">Change appearance</string>
+    <string name="appearance_button">Theme</string>
+    <string name="appearance_description">Change theme</string>
     <string name="feedback_button">Send feedback</string>
     <string name="feedback_description">Send feedback</string>
     <string name="by_category">By category</string>
@@ -31,6 +31,14 @@
     <string name="order_by">Order by</string>
     <string name="light_mode">Light Mode</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="io_db_error">Couldn\'t load data. Please try again.</string>
+    <string name="failed_to_load_data_db">Failed to load data</string>
+    <string name="db_error_disk">There was an error accessing your data. Please try again.</string>
+    <string name="db_error_corrupt">Local data appears to be corrupted. We\'re trying to fix it.</string>
+    <string name="db_error_cant_open">Could not access the database. Please check your storage.</string>
+    <string name="db_error_disk_description">Data accessing error</string>
+    <string name="db_error_corrupt_description">Local data corrupted</string>
+    <string name="db_error_cant_open_description">Inaccessible database</string>
 
     <!-- Place Categories -->
     <string name="category_coffee_shop">Coffee Shops</string>
@@ -38,4 +46,5 @@
     <string name="category_family_place">Kid-Friendly Places</string>
     <string name="category_park">Parks</string>
     <string name="category_shopping_center">Shopping Centers</string>
+    <string name="nothing_here_yet">Nothing here yet.</string>
 </resources>

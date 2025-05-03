@@ -29,7 +29,8 @@ class UserPreferencesRepository(
                 Log.e(TAG, "Error reading preferences.", it)
                 emit(emptyPreferences())
             } else throw it
-        }.map { preferences -> if (preferences[THEME] == "DARK") AppTheme.DARK else AppTheme.LIGHT }
+        }
+            .map { preferences -> if (preferences[THEME] == AppTheme.DARK.name) AppTheme.DARK else AppTheme.LIGHT }
 
     override suspend fun saveThemePreference(theme: AppTheme) {
         dataStore.edit { preferences ->

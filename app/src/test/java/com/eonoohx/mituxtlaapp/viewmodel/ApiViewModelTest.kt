@@ -7,33 +7,30 @@ import com.eonoohx.mituxtlaapp.fake.FakeUserPreferenceRepository
 import com.eonoohx.mituxtlaapp.rules.TestDispatcherRule
 import com.eonoohx.mituxtlaapp.ui.model.MiTuxtlaViewModel
 import com.eonoohx.mituxtlaapp.ui.model.PlaceServiceUiState
-import com.eonoohx.mituxtlaapp.ui.utils.PlaceApiErrorType
+import com.eonoohx.mituxtlaapp.ui.model.TIMEOUT
+import com.eonoohx.mituxtlaapp.ui.utils.ApiErrorType
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class ViewModelApiTest {
+class ApiViewModelTest {
     private lateinit var miTuxtlaViewModel: MiTuxtlaViewModel
 
     @get: Rule
     val testDispatcherRule = TestDispatcherRule()
 
-    private fun setUp(
-        httpError: Boolean = false,
-        networkError: Boolean = false,
-        timeoutError: Boolean = false
-    ) {
+    private val fakeApiRepository = FakeNetworkPlaceRepository()
+
+    @Before
+    fun setUp() {
         miTuxtlaViewModel = MiTuxtlaViewModel(
-            placesRepository = FakeNetworkPlaceRepository(
-                httpError = httpError,
-                networkError = networkError,
-                timeoutError = timeoutError
-            ),
+            placesRepository = fakeApiRepository,
             databaseRepository = FakeFavoritePlaceDatabase(),
             userPreferencesRepository = FakeUserPreferenceRepository(),
         )
@@ -42,9 +39,6 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placesViewModel_getPlaces_verifyListPlacesUiSateSuccess() = runTest {
-
-        setUp()
-
         miTuxtlaViewModel.getApiPlacesList("")
 
         advanceUntilIdle()
@@ -58,9 +52,6 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placesViewModel_getPlaceInfo_verifyPlaceInfoUiState() = runTest {
-
-        setUp()
-
         miTuxtlaViewModel.getApiPlaceInfo("")
         advanceUntilIdle()
         assertEquals(
@@ -72,14 +63,14 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placeViewModel_getListOfPlaces_httpException() = runTest {
-        setUp(httpError = true)
+        fakeApiRepository.apiError = ApiErrorType.HTTP
 
         miTuxtlaViewModel.getApiPlacesList("")
 
-        runCurrent()
+        advanceUntilIdle()
 
         assertEquals(
-            PlaceServiceUiState.Error(PlaceApiErrorType.HTTP),
+            PlaceServiceUiState.Error(ApiErrorType.HTTP),
             miTuxtlaViewModel.listPlacesUiState
         )
     }
@@ -87,14 +78,14 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placeViewModel_getListOfPlaces_networkException() = runTest {
-        setUp(networkError = true)
+        fakeApiRepository.apiError = ApiErrorType.NETWORK
 
         miTuxtlaViewModel.getApiPlacesList("")
 
         runCurrent()
 
         assertEquals(
-            PlaceServiceUiState.Error(PlaceApiErrorType.NETWORK),
+            PlaceServiceUiState.Error(ApiErrorType.NETWORK),
             miTuxtlaViewModel.listPlacesUiState
         )
     }
@@ -102,15 +93,15 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placeViewModel_getListOfPlaces_timeoutException() = runTest {
-        setUp(timeoutError = true)
+        fakeApiRepository.apiError = ApiErrorType.TIMEOUT
 
         miTuxtlaViewModel.getApiPlacesList("")
 
-        advanceTimeBy(12000)
+        advanceTimeBy(TIMEOUT + 1)
         runCurrent()
 
         assertEquals(
-            PlaceServiceUiState.Error(PlaceApiErrorType.TIMEOUT),
+            PlaceServiceUiState.Error(ApiErrorType.TIMEOUT),
             miTuxtlaViewModel.listPlacesUiState
         )
     }
@@ -118,14 +109,14 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placeViewModel_getPlaceInfo_httpException() = runTest {
-        setUp(httpError = true)
+        fakeApiRepository.apiError = ApiErrorType.HTTP
 
         miTuxtlaViewModel.getApiPlaceInfo("")
 
         runCurrent()
 
         assertEquals(
-            PlaceServiceUiState.Error(PlaceApiErrorType.HTTP),
+            PlaceServiceUiState.Error(ApiErrorType.HTTP),
             miTuxtlaViewModel.placeInfoUiState
         )
     }
@@ -133,14 +124,14 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placeViewModel_getPlaceInfo_networkException() = runTest {
-        setUp(networkError = true)
+        fakeApiRepository.apiError = ApiErrorType.NETWORK
 
         miTuxtlaViewModel.getApiPlaceInfo("")
 
         runCurrent()
 
         assertEquals(
-            PlaceServiceUiState.Error(PlaceApiErrorType.NETWORK),
+            PlaceServiceUiState.Error(ApiErrorType.NETWORK),
             miTuxtlaViewModel.placeInfoUiState
         )
     }
@@ -148,15 +139,15 @@ class ViewModelApiTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun placeViewModel_getPlaceInfo_timeoutException() = runTest {
-        setUp(timeoutError = true)
+        fakeApiRepository.apiError = ApiErrorType.TIMEOUT
 
         miTuxtlaViewModel.getApiPlaceInfo("")
 
-        advanceTimeBy(12000)
+        advanceTimeBy(TIMEOUT + 1)
         runCurrent()
 
         assertEquals(
-            PlaceServiceUiState.Error(PlaceApiErrorType.TIMEOUT),
+            PlaceServiceUiState.Error(ApiErrorType.TIMEOUT),
             miTuxtlaViewModel.placeInfoUiState
         )
     }

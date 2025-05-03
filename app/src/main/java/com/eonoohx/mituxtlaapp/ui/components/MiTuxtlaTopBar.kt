@@ -1,7 +1,8 @@
 package com.eonoohx.mituxtlaapp.ui.components
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -62,7 +63,7 @@ fun MiTuxtlaTopAppBar(
         title = {
             Text(
                 text = stringResource(screenTitle),
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 color = if (screenTitle != R.string.about && screenTitle != R.string.feedback)
                     MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.secondary,
                 overflow = TextOverflow.Ellipsis,
@@ -76,7 +77,7 @@ fun MiTuxtlaTopAppBar(
                         imageVector = Icons.AutoMirrored.Default.ArrowBack,
                         contentDescription = stringResource(R.string.back_button),
                         tint = if (screenTitle != R.string.about && screenTitle != R.string.feedback)
-                            MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                            MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onBackground
                     )
                 }
             } else {
@@ -123,7 +124,11 @@ fun MiTuxtlaAppMenu(
     onChangeTheme: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    DropdownMenu(expanded = expanded, onDismissRequest = onDismissRequest, modifier = modifier) {
+    DropdownMenu(
+        expanded = expanded, onDismissRequest = onDismissRequest, modifier = modifier.width(
+            dimensionResource(R.dimen.size_medium)
+        )
+    ) {
         DropdownMenuItem(
             text = { Text(text = stringResource(R.string.appearance_button)) },
             leadingIcon = {
@@ -135,10 +140,7 @@ fun MiTuxtlaAppMenu(
             onClick = onChangeTheme,
         )
         HorizontalDivider(
-            modifier = Modifier.border(
-                width = dimensionResource(R.dimen.padding_medium),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_small))
         )
         DropdownMenuItem(
             text = { Text(text = stringResource(R.string.about)) },

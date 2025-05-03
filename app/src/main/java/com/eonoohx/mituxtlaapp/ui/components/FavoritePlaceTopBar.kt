@@ -1,6 +1,5 @@
 package com.eonoohx.mituxtlaapp.ui.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -54,7 +53,7 @@ fun FavoritePlaceTopBar(
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
                     contentDescription = stringResource(R.string.back_button),
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onSecondary
                 )
             }
         },
@@ -82,10 +81,7 @@ fun FavoritePlaceTopBar(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 HorizontalDivider(
-                    modifier = Modifier.border(
-                        width = dimensionResource(R.dimen.padding_medium),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_small))
                 )
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.by_name)) },
