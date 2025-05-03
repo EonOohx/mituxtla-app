@@ -174,13 +174,11 @@ fun PlaceInfoCard(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-            if (data.website != null) {
-                if (data.website.isNotEmpty()) {
-                    Text(
-                        text = "Website: ${data.website}",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+            if (!data.website.isNullOrEmpty()) {
+                Text(
+                    text = "Website: ${data.website}",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
