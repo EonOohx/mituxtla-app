@@ -24,6 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.eonoohx.mituxtlaapp.R
 import com.eonoohx.mituxtlaapp.ui.theme.MiTuxtlaAppTheme
@@ -43,9 +44,15 @@ fun AboutScreen(modifier: Modifier = Modifier) {
                 .align(Alignment.CenterHorizontally)
                 .clip(Shape.medium)
         )
-        Text(text = "Text of the about page", modifier = Modifier.fillMaxWidth())
-        Text(text = "Version: 1.0. Released on May 3th 2025")
-        Text(text = "Contact", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = stringResource(R.string.app_name),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(text = "Aplicación para conocer los lugares más populares de Tuxtla Gutiérrez, Chiapas, México.")
+        Text(text = "Versión: 1.0. Lanzado el 3 de Mayo del 2025")
+        Text(text = "Contacto", style = MaterialTheme.typography.headlineMedium)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
@@ -86,9 +93,11 @@ fun AboutScreen(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, showSystemUi = true)
 fun AboutScreenPreview() {
     MiTuxtlaAppTheme {
-        AboutScreen(modifier = Modifier
-            .fillMaxSize()
-            .safeContentPadding())
+        AboutScreen(
+            modifier = Modifier
+                .fillMaxSize()
+                .safeContentPadding()
+        )
     }
 }
 
