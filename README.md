@@ -34,7 +34,7 @@ La aplicación se conecta a una **API REST** que proporciona la información de 
 
 ## 📥 Instalación
 ### Requisitos
-- Android 8.0 (API 26) o superior
+- Android 5.0 (API 21) o superior
 
 ### Procedimiento
 1. Descarga el archivo `.apk` del siguiente enlance :
