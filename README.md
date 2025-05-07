@@ -28,7 +28,7 @@ Este proyecto nace como parte de mi proceso de aprendizaje en el desarrollo de a
 | Control de versión| Git + GitHub                        |
 
 ## 🔗 API asociada
-La aplicación se conecta a una **API REST** que proporciona la información de los lugares consultados, enlazándose con el servicio de **Google Places API** y utilizando el modelo de IA **GPT-4o Min** para proporcionar una descripción adecuada al lugar con base a la ubicación y comentarios.
+La aplicación se conecta a una **API REST** que proporciona la información de los lugares consultados, enlazándose con el servicio de **Google Places API** y utilizando el modelo de IA **GPT-4o Mini** para proporcionar una descripción adecuada al lugar con base a la ubicación y comentarios.
 
 **Repositorio de la API**: [Ver backend en GitHub](https://github.com/EonOohx/mituxtla-api)
 
