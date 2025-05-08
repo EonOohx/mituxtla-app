@@ -170,13 +170,13 @@ fun PlaceInfoCard(
             )
             if (data.phone != null) {
                 Text(
-                    text = "Phone: ${data.phone}",
+                    text = stringResource(R.string.phone, data.phone),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
             if (!data.website.isNullOrEmpty()) {
                 Text(
-                    text = "Website: ${data.website}",
+                    text = stringResource(R.string.website, data.website),
                     style = MaterialTheme.typography.bodySmall
                 )
             }
