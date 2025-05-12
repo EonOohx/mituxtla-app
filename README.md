@@ -1,4 +1,4 @@
-# 📱 MiTuxtlaApp: Guía de Lugares Populares de Tuxtla Gutiérrez-
+# 📱 MiTuxtlaApp: Guía de Lugares Populares de Tuxtla Gutiérrez
 
 Aplicación Android para conocer los lugares más populares de Tuxtla Gutiérrez, Chiapas, organizados por categorias. Cada lugar se presenta con una ficha informativas que incluye una imagen, ubicación, descripción y datos de contacto. Además, los usuarios pueden guardar los lugares como favoritos para acceder a ellos sin necesidad de acceso a internet.
 
