@@ -1,6 +1,11 @@
-# 📱 MiTuxtlaApp: Guía de Lugares Populares de Tuxtla Gutiérrez-
+# 📱 MiTuxtlaApp: Guía de Lugares Populares de Tuxtla Gutiérrez
+![Inicio del proyecto](https://img.shields.io/badge/Inicio-Marzo%202025-blue)
+![Finalización del proyecto](https://img.shields.io/badge/Finalizado-Abril%202025-green)
 
 Aplicación Android para conocer los lugares más populares de Tuxtla Gutiérrez, Chiapas, organizados por categorias. Cada lugar se presenta con una ficha informativas que incluye una imagen, ubicación, descripción y datos de contacto. Además, los usuarios pueden guardar los lugares como favoritos para acceder a ellos sin necesidad de acceso a internet.
+
+![Demo de pantalla de inicio](./assets/demo-home.gif)
+![Demo de favoritos](./assets/demo-favoritos.gif)
 
 ## 🎯 Propósito del Proyecto
 Este proyecto nace como parte de mi proceso de aprendizaje en el desarrollo de aplicaciones móviles Android. Mi objetivo fue aplicar Jetpack Compose para la UI, gestionar el estado con ViewModel + StateFlow, consumir una API REST y trabajar con persistencia de datos local. Ademas de ayudarme a reforzar mi comprensión sobre la asincronía, la reactividad y la estructura limpia de aplicaciones móviles.
