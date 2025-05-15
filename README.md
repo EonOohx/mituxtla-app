@@ -43,7 +43,7 @@ La aplicación se conecta a una **API REST** que proporciona la información de 
 
 ### Procedimiento
 1. Descarga el archivo `.apk` del siguiente enlance :
-[mituxtlaapp-v1.0.apk](https://github.com/EonOohx/mituxtla-app/releases/download/v1.0.0/mituxtlapp-release.apk)
+[mituxtlaapp-v1.0.apk](https://github.com/EonOohx/mituxtla-app/releases/download/v1.0.0/mituxtlaapp-release.apk)
 2. Ábrelo en tu dispositivo Android y acepta los permisos de instalación de fuentes externas
 3. ¡Listo para explorar!
 
