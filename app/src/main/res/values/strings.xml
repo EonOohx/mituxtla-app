@@ -39,6 +39,9 @@
     <string name="db_error_disk_description">Error al acceder a los datos</string>
     <string name="db_error_corrupt_description">Datos locales dañados</string>
     <string name="db_error_cant_open_description">Base de datos inaccesible</string>
+    <string name="nothing_here_yet">Aún no hay nada aquí.</string>
+    <string name="phone">Teléfono: %1$s</string>
+    <string name="website">Página Web: %1$s</string>
 
     <!-- Categorías de lugares -->
     <string name="category_coffee_shop">Cafeterías</string>
@@ -46,5 +49,4 @@
     <string name="category_family_place">Lugares para niños</string>
     <string name="category_park">Parques</string>
     <string name="category_shopping_center">Centros comerciales</string>
-    <string name="nothing_here_yet">Aún no hay nada aquí.</string>
 </resources>
