@@ -47,6 +47,9 @@ La aplicación se conecta a una **API REST** que proporciona la información de 
 2. Ábrelo en tu dispositivo Android y acepta los permisos de instalación de fuentes externas
 3. ¡Listo para explorar!
 
+⚠️ Nota sobre el rendimiento del servidor
+La API de esta aplicación está alojada en Railway bajo un plan gratuito. Debido a ello, el servidor puede entrar en reposo tras períodos de inactividad. Como resultado, las primeras solicitudes realizadas después de un tiempo sin uso podría demorar algunos segundos en responder con la información de los lugares, esto mientras se reactiva el servicio
+
 ## 📬 Contacto
 
 Si deseas dejar comentarios, sugerencias o contactarme:
