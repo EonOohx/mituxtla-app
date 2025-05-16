@@ -17,8 +17,8 @@ enum class ApiErrorType(
 ) :
     RepositoryErrorType {
     NETWORK(errorMessage = R.string.network_error, contentDescription = R.string.no_connection),
-    HTTP(errorMessage = R.string.http_error, contentDescription = R.string.request_timed_out),
-    TIMEOUT(errorMessage = R.string.timeout_error, contentDescription = R.string.server_error)
+    HTTP(errorMessage = R.string.http_error, contentDescription = R.string.server_error),
+    TIMEOUT(errorMessage = R.string.timeout_error, contentDescription = R.string.request_timed_out)
 }
 
 enum class DataBaseErrorType(

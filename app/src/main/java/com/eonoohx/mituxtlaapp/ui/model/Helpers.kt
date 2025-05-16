@@ -16,13 +16,13 @@ suspend fun <T> dbCallHelper(
 ) {
     try {
         call()
-    } catch (e: IOException) {
+    } catch (_: IOException) {
         onError(PlaceServiceUiState.Error(DataBaseErrorType.IO))
-    } catch (e: SQLiteDiskIOException) {
+    } catch (_: SQLiteDiskIOException) {
         onError(PlaceServiceUiState.Error(DataBaseErrorType.DISK))
-    } catch (e: SQLiteDatabaseCorruptException) {
+    } catch (_: SQLiteDatabaseCorruptException) {
         onError(PlaceServiceUiState.Error(DataBaseErrorType.CORRUPT))
-    } catch (e: SQLiteCantOpenDatabaseException) {
+    } catch (_: SQLiteCantOpenDatabaseException) {
         onError(PlaceServiceUiState.Error(DataBaseErrorType.INACCESSIBLE))
     }
 }
@@ -36,11 +36,11 @@ suspend fun <T> apiCallHelper(
         withTimeout(TIMEOUT) {
             PlaceServiceUiState.Success(call())
         }
-    } catch (e: IOException) {
+    } catch (_: IOException) {
         PlaceServiceUiState.Error(ApiErrorType.NETWORK)
-    } catch (e: HttpException) {
+    } catch (_: HttpException) {
         PlaceServiceUiState.Error(ApiErrorType.HTTP)
-    } catch (e: TimeoutCancellationException) {
+    } catch (_: TimeoutCancellationException) {
         PlaceServiceUiState.Error(ApiErrorType.TIMEOUT)
     }
 }

@@ -8,5 +8,5 @@ interface PlaceApiService {
     suspend fun getPlaces(@Query("query") search: String): List<Place>
 
     @GET("place/details")
-    suspend fun getPlaceInfo(@Query("place_id") placeId: String): PlaceInfo
+    suspend fun getPlaceInfo(@Query("place_id") placeId: String, ): PlaceInfo
 }
