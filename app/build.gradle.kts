@@ -26,10 +26,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URI", "\"https://mituxtla-api-production.up.railway.app/\"")
+            buildConfigField("String", "BASE_URI", "\"https://mituxtla-api.onrender.com\"")
         }
         debug {
-            buildConfigField("String", "BASE_URI", "\"https://mituxtla-api-production.up.railway.app/\"")
+            buildConfigField("String", "BASE_URI", "\"https://mituxtla-api.onrender.com\"")
         }
     }
     compileOptions {
